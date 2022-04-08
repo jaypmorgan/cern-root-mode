@@ -13,6 +13,11 @@ the package with straight.el:
 
 ```lisp
 (use-package root-mode
+  :bind (:map c++-mode-map
+	     (("C-c C-c" . root-eval-defun)
+	      ("C-c C-b" . root-eval-buffer)
+	      ("C-c C-l" . root-eval-file)
+	      ("C-c C-r" . root-eval-region)))
   :straight (root-mode :type git :host github :repo "jaypmorgan/root-mode")
   :config
   (setq root-filepath "/path/to/root"))
