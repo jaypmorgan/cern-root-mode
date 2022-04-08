@@ -43,7 +43,7 @@
   :type 'string
   :group 'root)
 
-(defcustom root-prompt-regex "^\\(?:\\root\\s\\[\\d+\\]\\)"
+(defcustom root-prompt-regex "^\\(?:root\\s\\[\\d+\\]\\) "
   "Regular expression to find prompt location in ROOT-repl."
   :type 'string
   :group 'root)
@@ -75,7 +75,7 @@
 (defun run-root-other-window ()
   "Run an inferior instance of ROOT in an different window"
   (interactive)
-  (split-window)
+  (split-window-sensibly)
   (other-window 1)
   (run-root))
 
@@ -87,38 +87,44 @@
 	(select-window win)
       (switch-to-buffer root-buffer-name))))
 
+(defmacro remembering-position (&rest body)
+  `(save-window-excursion (save-excursion ,@body)))
+
+(defun root-eval-region (beg end)
+  "Evaluate a region in ROOT"
+  (interactive "r")
+  (kill-ring-save beg end)
+  (comint-send-region root-buffer-name beg end))
+
 (defun root-eval-defun ()
   "Evaluate a function in ROOT"
   (interactive)
-  (save-window-excursion
-    (save-excursion
-      (mark-defun)
-      (kill-ring-save (region-beginning) (region-end))
-      (comint-send-string root-buffer-name (pop kill-ring)))))
+  (remembering-position
+   (mark-defun)
+   (root-eval-region (region-beginning) (region-end))))
 
 (defun root-eval-buffer ()
   "Evaluate the buffer in ROOT"
   (interactive)
-  (save-window-excursion
-    (save-excursion
-      (mark-whole-buffer)
-      (kill-ring-save (region-beginning) (region-end))
-      (comint-send-string root-buffer-name (pop kill-ring)))))
+  (remembering-position
+   (mark-whole-buffer)
+   (root-eval-region (region-beginning) (region-end))))
 
 (defun root-eval-file (filename)
   "Evaluate a file in ROOT"
   (interactive "fFile to load")
-  (save-window-excursion
-    (save-excursion
-      (comint-send-string root-buffer-name (concat ".U " filename "\n"))
-      (comint-send-string root-buffer-name (concat ".L " filename "\n")))))
+  (comint-send-string root-buffer-name (concat ".U " filename "\n"))
+  (comint-send-string root-buffer-name (concat ".L " filename "\n")))
 
 (defun root-change-working-directory (dir)
   "Change the working directory of ROOT"
   (interactive "DChange to directory")
-  (save-window-excursion
-    (save-excursion
-      (comint-send-string root-buffer-name (concat "gSystem->cd(\"" dir "\");\n")))))
+  (comint-send-string root-buffer-name (concat "gSystem->cd(\"" dir "\");\n")))
+
+(defun root-list-input-history ()
+  "List the history of previously entered statements"
+  (interactive)
+  (comint-dynamic-list-input-ring))
 
 (defun root--initialise ()
   (setq comint-process-echoes t
