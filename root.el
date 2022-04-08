@@ -29,17 +29,31 @@
 
 ;;; Code:
 
-(defvar root-filepath "root"
-  "* Path to the ROOT executable")
+(defcustom root nil
+  "Major-mode for running C++ code with ROOT"
+  :group 'languages)
+
+(defcustom root-filepath "root"
+  "Path to the ROOT executable"
+  :type 'string
+  :group 'root)
+
+(defcustom root-command-options ""
+  "Command line options for running ROOT"
+  :type 'string
+  :group 'root)
+
+(defcustom root-prompt-regex "^\\(?:\\root\\s\\[\\d+\\]\\)"
+  "Regular expression to find prompt location in ROOT-repl."
+  :type 'string
+  :group 'root)
 
 (defvar root-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     map)
   "Basic mode map for ROOT")
 
-(defvar root-prompt-regex "^\\(?:\\root\\s\\[\\d+\\]\\)"
-  "* Regular expression to find prompt location in ROOT-repl.")
-
+;;;###autoload
 (defun run-root ()
   "Run an inferior instance of ROOT"
   (interactive)
@@ -51,7 +65,7 @@
 	 (get-buffer-create (or buffer "*ROOT*"))
        (current-buffer)))
     (unless buffer
-      (make-comint-in-buffer "ROOT" buffer root-exe "")
+      (make-comint-in-buffer "ROOT" buffer root-exe root-command-options)
       (root-mode))))
 
 (defun root--initialise ()
