@@ -1,4 +1,35 @@
-(defvar root-filepath "/home/jaymorgan/Téléchargements/root-6.26.00/root_install/bin/root"
+;;; root.el --- Major-mode for running C++ code with ROOT  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2022  Jay Morgan
+
+;; Author: Jay Morgan <jaymorgan@debian>
+;; Keywords: languages, tools
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; ROOT (https://root.cern/) is a framework for performing data
+;; analysis. This package means to integrate this framework within the
+;; ecosystem of Emacs. More specifically, root.el provides functions
+;; to run C++ code within the ROOT REPL and execute org-mode source
+;; code blocks, replicating the jupyter environment in `root
+;; --notebook'.
+
+;;; Code:
+
+(defvar root-filepath "root"
   "* Path to the ROOT executable")
 
 (defvar root-mode-map
@@ -45,3 +76,4 @@
 ;;   (message "Executing C++ source code block in ROOT"))
 
 (provide 'root-mode)
+;;; root.el ends here
