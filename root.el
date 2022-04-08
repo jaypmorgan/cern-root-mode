@@ -53,6 +53,9 @@
     map)
   "Basic mode map for ROOT")
 
+(defvar root-buffer-name "*ROOT*"
+  "Name of the ROOT REPL buffer.")
+
 ;;;###autoload
 (defun run-root ()
   "Run an inferior instance of ROOT"
@@ -62,11 +65,60 @@
     (pop-to-buffer-same-window
      (if (or buffer (not (derived-mode-p 'root-mode))
 	     (comint-check-proc (current-buffer)))
-	 (get-buffer-create (or buffer "*ROOT*"))
+	 (get-buffer-create (or buffer root-buffer-name))
        (current-buffer)))
     (unless buffer
-      (make-comint-in-buffer "ROOT" buffer root-exe root-command-options)
+      (make-comint-in-buffer "ROOT" buffer root-exe nil root-command-options)
       (root-mode))))
+
+;;;###autoload
+(defun run-root-other-window ()
+  "Run an inferior instance of ROOT in an different window"
+  (interactive)
+  (split-window)
+  (other-window 1)
+  (run-root))
+
+(defun root-switch-to-repl ()
+  "Switch to the ROOT REPL"
+  (interactive)
+  (let ((win (get-buffer-window root-buffer-name)))
+    (if win
+	(select-window win)
+      (switch-to-buffer root-buffer-name))))
+
+(defun root-eval-defun ()
+  "Evaluate a function in ROOT"
+  (interactive)
+  (save-window-excursion
+    (save-excursion
+      (mark-defun)
+      (kill-ring-save (region-beginning) (region-end))
+      (comint-send-string root-buffer-name (pop kill-ring)))))
+
+(defun root-eval-buffer ()
+  "Evaluate the buffer in ROOT"
+  (interactive)
+  (save-window-excursion
+    (save-excursion
+      (mark-whole-buffer)
+      (kill-ring-save (region-beginning) (region-end))
+      (comint-send-string root-buffer-name (pop kill-ring)))))
+
+(defun root-eval-file (filename)
+  "Evaluate a file in ROOT"
+  (interactive "fFile to load")
+  (save-window-excursion
+    (save-excursion
+      (comint-send-string root-buffer-name (concat ".U " filename "\n"))
+      (comint-send-string root-buffer-name (concat ".L " filename "\n")))))
+
+(defun root-change-working-directory (dir)
+  "Change the working directory of ROOT"
+  (interactive "DChange to directory")
+  (save-window-excursion
+    (save-excursion
+      (comint-send-string root-buffer-name (concat "gSystem->cd(\"" dir "\");\n")))))
 
 (defun root--initialise ()
   (setq comint-process-echoes t
@@ -80,9 +132,8 @@
   nil "ROOT"
   (setq comint-prompt-regexp root-prompt-regex
 	comint-prompt-read-only t)
-  (set (make-local-variable 'paragraph-separate "\\'"))
-  (set (make-local-variable 'font-lock-defaults (c++-font-lock-keywords)))
-  (set (make-local-variable 'paragraph-start root-prompt-regex))
+  (set (make-local-variable 'paragraph-separate) "\\'")
+  (set (make-local-variable 'paragraph-start) root-prompt-regex)
   (add-hook 'root-mode-hook 'root--initialise))
 
 ;; (defun org-babel-execute:root (body params)

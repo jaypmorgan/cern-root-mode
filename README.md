@@ -33,6 +33,13 @@ There are only a few variables provided by the package:
 
 Below is listed the various commands provided by the package.
 
-| Command    | Description                             |
-|:-----------|:----------------------------------------|
-| `run-root` | Start the ROOT REPL in the same window. |
+| Command                         | Description                                                                    |
+|:--------------------------------|:-------------------------------------------------------------------------------|
+| `run-root`                      | Start the ROOT REPL in the same window.                                        |
+| `run-root-other-window`         | Start the ROOT REPL in a difference window.                                    |
+| `root-switch-to-repl`           | Move the cursor to the ROOT REPL.                                              |
+| `root-eval-defun`               | Evaluate the current function in ROOT (current as defined by cursor position). |
+| `root-eval-buffer`              | Evaluate the current buffer in ROOT.                                           |
+| `root-eval-file`                | Evaluate a file (using the '.L' syntax), prompt for a file.                    |
+| `root-change-working-directory` | Change the working directory of the root session, prompt for a directory.      |
+
