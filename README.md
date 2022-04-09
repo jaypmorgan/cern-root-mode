@@ -25,14 +25,26 @@ the package with straight.el:
 
 There are only a few variables provided by the package:
 
-- **root-filepath** -- this is the absolute/relative path to the root
-  executable. This could be left as the default "root" value if ROOT
-  is available on your $PATH.
-- **root-command-option** -- these are the command line options used
-  when starting ROOT. By default there are no options.
-- **root-prompt-regex** -- this is the regular expression used to find
-  the input prompt of the ROOT REPL. If there is a customised prompt,
-  this will need to be updated to suit the customisation.
+- **root-filepath** -- (string, default `""`) this is the
+  absolute/relative path to the root executable. This could be left as
+  the default "root" value if ROOT is available on your $PATH.
+- **root-command-option** -- (string, default `""`) these are the
+  command line options used when starting ROOT. By default there are
+  no options.
+- **root-prompt-regex** -- (string, default `"\\[[0-9;^k]+m?"`) this
+  is the regular expression used to find the input prompt of the ROOT
+  REPL. If there is a customised prompt, this will need to be updated
+  to suit the customisation.
+- **root-buffer-name** -- (string, default `"*ROOT*"`) what to call
+  the ROOT repl buffer when it starts. This could be left as the
+  default `*ROOT*`, but its there for you to modify as you please.
+- **root-terminal-backend** -- (symbol, default `'terminal`) the
+  terminal emulator to run the ROOT instance in. There are only two
+  current defined [`vterm`, `inferior`]. By default, the terminal
+  backend is set to `inferior`. Though, there is still some issues in
+  getting the auto-complete to work correctly. If you really need
+  auto-complete, I would recommend switching the backend to `'vterm`
+  (requires you've already installed vterm).
   
 ## Using the package
 

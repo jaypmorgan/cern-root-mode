@@ -43,23 +43,74 @@
   :type 'string
   :group 'root)
 
-(defcustom root-prompt-regex "^\\(?:root \\[[0-9]+\\] \\)"
+(defcustom root-prompt-regex "^\\(?:root \\[[0-9]+\\]\\)"
   "Regular expression to find prompt location in ROOT-repl."
   :type 'string
   :group 'root)
 
-(defvar root-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    map)
-  "Basic mode map for ROOT")
+(defcustom root-terminal-backend 'inferior
+  "Type of terminal to use when running ROOT"
+  :type 'symbol
+  :options '(inferior vterm)
+  :group 'root)
 
-(defvar root-buffer-name "*ROOT*"
-  "Name of the ROOT REPL buffer.")
+(defcustom root-buffer-name "*ROOT*"
+  "Name of the newly create buffer for ROOT"
+  :type 'string
+  :group 'root)
 
-;;;###autoload
-(defun run-root ()
+;;; end of user variables
+
+(defmacro remembering-position (&rest body)
+  `(save-window-excursion (save-excursion ,@body)))
+
+(defun pushnew (element lst)
+  (if (member element lst)
+      lst
+    (push member lst)))
+
+(defvar root--backend-functions
+  '((vterm . ((start-terminal . root--start-vterm)
+	      (send-function . root--send-vterm)))
+    (inferior . ((start-terminal . root--start-inferior)
+		 (send-function . root--send-inferior))))
+  "Mapping from terminal type to various specific functions")
+
+(defun root--get-functions-for-terminal (terminal)
+  (cdr (assoc terminal root--backend-functions)))
+
+(defun root--get-function-for-terminal (terminal function-type)
+  (cdr (assoc function-type (root--get-functions-for-terminal terminal))))
+
+(defun root--get-function-for-current-terminal (function-type)
+  (root--get-function-for-terminal root-terminal-backend function-type))
+
+(defalias 'root--ctfun 'root--get-function-for-current-terminal
+  "ctfun -- current terminal function")
+
+(defun root--send-vterm (proc input)
+  "Send a string to the vterm REPL."
+  (remembering-position
+   (root-switch-to-repl)
+   (vterm-send-string input)
+   (vterm-send-return)))
+
+(defun root--send-inferior (proc input)
+  "Send a string to an inferior REPL."
+  (comint-send-string proc (format "%s\n" input)))
+
+(defun root--send-string (proc input)
+  "Send a string to the ROOT repl."
+  (funcall (root--ctfun 'send-function) proc input))
+
+(defun root--start-vterm ()
+  "Run an instance of ROOT in vterm"
+  (with-current-buffer (vterm root-buffer-name)
+    (vterm-send-string root-filepath)
+    (vterm-send-return)))
+
+(defun root--start-inferior ()
   "Run an inferior instance of ROOT"
-  (interactive)
   (let ((root-exe root-filepath)
 	(buffer (comint-check-proc "ROOT")))
     (pop-to-buffer-same-window
@@ -70,6 +121,92 @@
     (unless buffer
       (make-comint-in-buffer "ROOT" buffer root-exe nil root-command-options)
       (root-mode))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Major mode & comint functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun root--initialise ()
+  (setq comint-process-echoes t
+	comint-use-prompt-regexp t))
+
+(defvar root-mode-map
+  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+    (define-key map "\t" 'completion-at-point)
+    map)
+  "Basic mode map for ROOT")
+
+(define-derived-mode root-mode comint-mode
+  "ROOT"
+  "Major for `run-root'.
+
+\\<root-mode-map>"
+  nil "ROOT"
+  (setq comint-prompt-regexp root-prompt-regex
+	comint-prompt-read-only nil
+	process-connection-type 'pipe)
+  (set (make-local-variable 'paragraph-separate) "\\'")
+  (set (make-local-variable 'paragraph-start) root-prompt-regex)
+  (add-hook 'comint-dynamic-complete-functions 'root--comint-dynamic-completion-function nil 'local)
+  (set (make-local-variable 'comint-input-sender) 'root--send-string)
+  (set (make-local-variable 'company-backends) (pushnew 'company-capf company-backends))
+  (add-hook 'root-mode-hook 'root--initialise))
+
+;; (defun org-babel-execute:root (body params)
+;;   "Execute a block of C++ code with ROOT in org-mode."
+;;   (message "Executing C++ source code block in ROOT"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Completion framework
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar root--keywords nil)
+
+(defvar root--completion-buffer-name "*ROOT Completions*")
+
+(defun root--completion-filter-function (text)
+  (setf root--keywords text))
+
+(defun root--clear-completions ()
+  (when (get-buffer root--completion-buffer-name)
+    (with-current-buffer root--completion-buffer-name
+      (erase-buffer))))
+
+(defun root--get-partial-input (beg end)
+  (buffer-substring-no-properties beg end))
+
+(defun root--remove-ansi-escape-codes (string)
+  (let ((regex "\\[[0-9;^k]+m?"))
+    (s-replace-regexp regex "" string)))
+
+(defun root--get-completions-from-buffer ()
+  (with-current-buffer root--completion-buffer-name
+    (while (not comint-redirect-completed)
+      (sleep 0.01))
+    (setq root--keywords (split-string (root--remove-ansi-escape-codes (buffer-string)) "\n"))))
+
+(defun root--comint-dynamic-completion-function ()
+  (cl-return)
+  (when-let* ((bound (bounds-of-thing-at-point 'symbol))
+	      (beg   (car bound))
+	      (end   (cdr bound)))
+    (when (> end beg)
+      (let ((partial-input (root--get-partial-input beg end)))
+	(message partial-input)
+	(root--clear-completions)
+	(comint-redirect-send-command-to-process
+	 (format "%s\t" partial-input) root--completion-buffer-name root-buffer-name "" nil)
+	(list beg end root--keywords . nil)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; User functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;###autoload
+(defun run-root ()
+  "Run an inferior instance of ROOT"
+  (interactive)
+  (funcall (root--ctfun 'start-terminal)))
 
 ;;;###autoload
 (defun run-root-other-window ()
@@ -86,9 +223,6 @@
     (if win
 	(select-window win)
       (switch-to-buffer root-buffer-name))))
-
-(defmacro remembering-position (&rest body)
-  `(save-window-excursion (save-excursion ,@body)))
 
 (defun root-eval-region (beg end)
   "Evaluate a region in ROOT"
@@ -125,26 +259,6 @@
   "List the history of previously entered statements"
   (interactive)
   (comint-dynamic-list-input-ring))
-
-(defun root--initialise ()
-  (setq comint-process-echoes t
-	comint-use-prompt-regexp t))
-
-(define-derived-mode root-mode comint-mode
-  "ROOT"
-  "Major for `run-root'.
-
-\\<root-mode-map>"
-  nil "ROOT"
-  (setq comint-prompt-regexp root-prompt-regex
-	comint-prompt-read-only t)
-  (set (make-local-variable 'paragraph-separate) "\\'")
-  (set (make-local-variable 'paragraph-start) root-prompt-regex)
-  (add-hook 'root-mode-hook 'root--initialise))
-
-;; (defun org-babel-execute:root (body params)
-;;   "Execute a block of C++ code with ROOT in org-mode."
-;;   (message "Executing C++ source code block in ROOT"))
 
 (provide 'root-mode)
 ;;; root.el ends here
