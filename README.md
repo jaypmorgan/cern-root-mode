@@ -25,7 +25,7 @@ the package with straight.el:
 
 There are only a few variables provided by the package:
 
-- **root-filepath** -- (string, default `""`) this is the
+- **root-filepath** -- (string, default `"root"`) this is the
   absolute/relative path to the root executable. This could be left as
   the default "root" value if ROOT is available on your $PATH.
 - **root-command-option** -- (string, default `""`) these are the
