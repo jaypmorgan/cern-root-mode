@@ -43,7 +43,7 @@
   :type 'string
   :group 'root)
 
-(defcustom root-prompt-regex "^\\(?:root\\s\\[\\d+\\]\\) "
+(defcustom root-prompt-regex "^\\(?:root \\[[0-9]+\\] \\)"
   "Regular expression to find prompt location in ROOT-repl."
   :type 'string
   :group 'root)
