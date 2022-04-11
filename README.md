@@ -53,7 +53,7 @@ Below is listed the various commands provided by the package.
 | Command                         | Description                                                                                                        |
 |:--------------------------------|:-------------------------------------------------------------------------------------------------------------------|
 | `run-root`                      | Start the ROOT REPL in the same window.                                                                            |
-| `run-root-other-window`         | Start the ROOT REPL in a difference window.                                                                        |
+| `run-root-other-window`         | Start the ROOT REPL in a different window.                                                                        |
 | `root-switch-to-repl`           | Move the cursor to the ROOT REPL.                                                                                  |
 | `root-eval-region`              | Evaluate a marked region in ROOT.                                                                                  |
 | `root-eval-line`                | Evaluate this line in the REPL.                                                                                    |
