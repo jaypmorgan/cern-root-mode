@@ -246,12 +246,27 @@
     (root-switch-to-repl)
     (root--send-string root-buffer-name string)))
 
+(defun root-eval-line ()
+  "Evaluate this line in ROOT"
+  (interactive)
+  (remembering-position
+   (let ((beg (progn (beginning-of-line) (point)))
+	 (end (progn (end-of-line) (point))))
+     (root-eval-region beg end))))
+
 (defun root-eval-defun ()
   "Evaluate a function in ROOT"
   (interactive)
   (remembering-position
-   (mark-defun)
+   (c-mark-function)
    (root-eval-region (region-beginning) (region-end))))
+
+(defun root-eval-defun-maybe ()
+  "Evaluate a defun in ROOT if in declaration else just the line"
+  (interactive)
+  (condition-case err
+      (root-eval-defun)
+    ('error (root-eval-line))))
 
 (defun root-eval-buffer ()
   "Evaluate the buffer in ROOT"

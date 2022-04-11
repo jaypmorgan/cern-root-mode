@@ -31,7 +31,7 @@ There are only a few variables provided by the package:
 - **root-command-option** -- (string, default `""`) these are the
   command line options used when starting ROOT. By default there are
   no options.
-- **root-prompt-regex** -- (string, default `"\\[[0-9;^k]+m?"`) this
+- **root-prompt-regex** -- (string, default `"^\\[[0-9;^k]+m?"`) this
   is the regular expression used to find the input prompt of the ROOT
   REPL. If there is a customised prompt, this will need to be updated
   to suit the customisation.
@@ -50,15 +50,17 @@ There are only a few variables provided by the package:
 
 Below is listed the various commands provided by the package.
 
-| Command                         | Description                                                                    |
-|:--------------------------------|:-------------------------------------------------------------------------------|
-| `run-root`                      | Start the ROOT REPL in the same window.                                        |
-| `run-root-other-window`         | Start the ROOT REPL in a difference window.                                    |
-| `root-switch-to-repl`           | Move the cursor to the ROOT REPL.                                              |
-| `root-eval-region`              | Evaluate a marked region in ROOT.                                              |
-| `root-eval-defun`               | Evaluate the current function in ROOT (current as defined by cursor position). |
-| `root-eval-buffer`              | Evaluate the current buffer in ROOT.                                           |
-| `root-eval-file`                | Evaluate a file (using the '.L' syntax), prompt for a file.                    |
-| `root-change-working-directory` | Change the working directory of the root session, prompt for a directory.      |
-| `root-list-input-history`       | List the previously input statements and for selection.                        |
+| Command                         | Description                                                                                                        |
+|:--------------------------------|:-------------------------------------------------------------------------------------------------------------------|
+| `run-root`                      | Start the ROOT REPL in the same window.                                                                            |
+| `run-root-other-window`         | Start the ROOT REPL in a difference window.                                                                        |
+| `root-switch-to-repl`           | Move the cursor to the ROOT REPL.                                                                                  |
+| `root-eval-region`              | Evaluate a marked region in ROOT.                                                                                  |
+| `root-eval-line`                | Evaluate this line in the REPL.                                                                                    |
+| `root-eval-defun`               | Evaluate the current function in ROOT (current as defined by cursor position).                                     |
+| `root-eval-defun-maybe`         | If the cursor is within a function declaration, then evaluate this function, else we'll evaluate this single line. |
+| `root-eval-buffer`              | Evaluate the current buffer in ROOT.                                                                               |
+| `root-eval-file`                | Evaluate a file (using the '.L' syntax), prompt for a file.                                                        |
+| `root-change-working-directory` | Change the working directory of the root session, prompt for a directory.                                          |
+| `root-list-input-history`       | List the previously input statements and for selection.                                                            |
 
