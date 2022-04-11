@@ -43,7 +43,7 @@
   :type 'string
   :group 'root)
 
-(defcustom root-prompt-regex "^\\(?:root \\[[0-9]+\\]\\)"
+(defcustom root-prompt-regex "^\\(?:root \\[[0-9]+\\] \\)"
   "Regular expression to find prompt location in ROOT-repl."
   :type 'string
   :group 'root)
@@ -99,9 +99,14 @@
   "Send a string to an inferior REPL."
   (comint-send-string proc (format "%s\n" input)))
 
+(defun root--preinput-clean (input)
+  (string-replace
+   "\t" ""
+   (string-replace "\n" " " (format "%s" input))))
+
 (defun root--send-string (proc input)
   "Send a string to the ROOT repl."
-  (funcall (root--ctfun 'send-function) proc input))
+  (funcall (root--ctfun 'send-function) proc (root--preinput-clean input)))
 
 (defun root--start-vterm ()
   "Run an instance of ROOT in vterm"
@@ -147,8 +152,9 @@
 	process-connection-type 'pipe)
   (set (make-local-variable 'paragraph-separate) "\\'")
   (set (make-local-variable 'paragraph-start) root-prompt-regex)
-  (add-hook 'comint-dynamic-complete-functions 'root--comint-dynamic-completion-function nil 'local)
   (set (make-local-variable 'comint-input-sender) 'root--send-string)
+  (add-hook 'comint-preoutput-filter-functions 'root--output-filter)
+  (add-hook 'comint-dynamic-complete-functions 'root--comint-dynamic-completion-function nil 'local)
   (set (make-local-variable 'company-backends) (pushnew 'company-capf company-backends))
   (add-hook 'root-mode-hook 'root--initialise))
 
@@ -160,9 +166,17 @@
 ;; Completion framework
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar root--last-output "")
+
 (defvar root--keywords nil)
 
 (defvar root--completion-buffer-name "*ROOT Completions*")
+
+(defun root--output-filter (output)
+  (setq root--last-output
+	(root--remove-ansi-escape-codes
+	 (mapconcat 'identity (butlast (split-string output "\n")) "\n")))
+  output)
 
 (defun root--completion-filter-function (text)
   (setf root--keywords text))
@@ -176,7 +190,7 @@
   (buffer-substring-no-properties beg end))
 
 (defun root--remove-ansi-escape-codes (string)
-  (let ((regex "\\[[0-9;^k]+m?"))
+  (let ((regex "\\[[0-9;^kD]+m?"))
     (s-replace-regexp regex "" string)))
 
 (defun root--get-completions-from-buffer ()
@@ -228,7 +242,9 @@
   "Evaluate a region in ROOT"
   (interactive "r")
   (kill-ring-save beg end)
-  (comint-send-region root-buffer-name beg end))
+  (let ((string (format "%s" (buffer-substring beg end))))
+    (root-switch-to-repl)
+    (root--send-string root-buffer-name string)))
 
 (defun root-eval-defun ()
   "Evaluate a function in ROOT"
