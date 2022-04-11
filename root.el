@@ -262,14 +262,14 @@
 
 (defun root-eval-file (filename)
   "Evaluate a file in ROOT"
-  (interactive "fFile to load")
+  (interactive "fFile to load: ")
   (comint-send-string root-buffer-name (concat ".U " filename "\n"))
   (comint-send-string root-buffer-name (concat ".L " filename "\n")))
 
 (defun root-change-working-directory (dir)
   "Change the working directory of ROOT"
-  (interactive "DChange to directory")
-  (comint-send-string root-buffer-name (concat "gSystem->cd(\"" dir "\");\n")))
+  (interactive "DChange to directory: ")
+  (comint-send-string root-buffer-name (concat "gSystem->cd(\"" (expand-file-name dir) "\")\n")))
 
 (defun root-list-input-history ()
   "List the history of previously entered statements"
