@@ -2,7 +2,9 @@
 
 ROOT-mode is an Emacs major-mode for interacting with ROOT
 (https://root.cern/). Specifically, this package provides the
-facilities to run the ROOT command line interface/REPL.
+facilities to run the ROOT command line interface/REPEL.
+
+![Example demonstration](./tests/brief-example.gif)
 
 ## Installation & Configuration
 

@@ -110,9 +110,8 @@
 
 (defun root--start-vterm ()
   "Run an instance of ROOT in vterm"
-  (with-current-buffer (vterm root-buffer-name)
-    (vterm-send-string root-filepath)
-    (vterm-send-return)))
+  (let ((vterm-shell root-filepath))
+    (vterm root-buffer-name)))
 
 (defun root--start-inferior ()
   "Run an inferior instance of ROOT"
