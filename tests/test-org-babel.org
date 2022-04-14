@@ -1,0 +1,21 @@
+#+begin_src root
+printf("test\n");
+#+end_src
+
+#+RESULTS:
+: test
+
+#+begin_src root
+int testing(int a, int b) {
+    return a + b;
+}
+
+auto result = testing(1, 2);
+printf("The result is %d\n", result);
+#+end_src
+
+#+RESULTS:
+: esult);
+: The result is 3
+
+#+RESULTS

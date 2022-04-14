@@ -71,9 +71,13 @@
 
 (defvar root--backend-functions
   '((vterm . ((start-terminal . root--start-vterm)
-	      (send-function . root--send-vterm)))
+	      (send-function . root--send-vterm)
+	      (previous-prompt . vterm-previous-prompt)
+	      (next-prompt . vterm-next-prompt)))
     (inferior . ((start-terminal . root--start-inferior)
-		 (send-function . root--send-inferior))))
+		 (send-function . root--send-inferior)
+		 (previous-prompt . comint-previous-prompt)
+		 (next-prompt . comint-next-prompt))))
   "Mapping from terminal type to various specific functions")
 
 (defun root--get-functions-for-terminal (terminal)
@@ -152,7 +156,6 @@
   (set (make-local-variable 'paragraph-separate) "\\'")
   (set (make-local-variable 'paragraph-start) root-prompt-regex)
   (set (make-local-variable 'comint-input-sender) 'root--send-string)
-  (add-hook 'comint-preoutput-filter-functions 'root--output-filter)
   (add-hook 'comint-dynamic-complete-functions 'root--comint-dynamic-completion-function nil 'local)
   (set (make-local-variable 'company-backends) (pushnew 'company-capf company-backends))
   (add-hook 'root-mode-hook 'root--initialise))
@@ -165,17 +168,21 @@
 ;; Completion framework
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar root--last-output "")
-
 (defvar root--keywords nil)
 
 (defvar root--completion-buffer-name "*ROOT Completions*")
 
-(defun root--output-filter (output)
-  (setq root--last-output
-	(root--remove-ansi-escape-codes
-	 (mapconcat 'identity (butlast (split-string output "\n")) "\n")))
-  output)
+(defun root--get-last-output ()
+  ;; TODO: needs improvement to better capture the last output
+  (remembering-position
+   (root-switch-to-repl)
+   (end-of-buffer)
+   (let* ((regex (format "%s.*"(substring root-prompt-regex 1)))
+	  (np (re-search-backward regex))
+	  (pp (progn (re-search-backward regex)
+		    (next-line)
+		    (point))))
+     (buffer-substring-no-properties pp np))))
 
 (defun root--completion-filter-function (text)
   (setf root--keywords text))
