@@ -66,3 +66,15 @@ Below is listed the various commands provided by the package.
 | `root-change-working-directory` | Change the working directory of the root session, prompt for a directory.                                          |
 | `root-list-input-history`       | List the previously input statements and for selection.                                                            |
 
+
+## Running tests
+
+To test the functionality of the package, some unit tests have been stored in the `tests/` directory. To run these unit tests, you can either evaluate the specific buffer in Emacs and run `ert` (see <https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html> for more information), or you can them all from the command line using:
+
+```bash
+emacs -batch \
+	-l ert \
+	-l root.el \
+	-l tests/test-root.el \
+	-f ert-run-tests-batch-and-exit
+```
