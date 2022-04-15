@@ -29,6 +29,9 @@
 
 ;;; Code:
 
+(require 'comint)
+(require 'vterm nil 'noerror)
+
 (defcustom root nil
   "Major-mode for running C++ code with ROOT"
   :group 'languages)
@@ -65,9 +68,9 @@
   `(save-window-excursion (save-excursion ,@body)))
 
 (defun push-new (element lst)
-  (if (member element lst)
+  (if (memq element lst)
       lst
-    (push member lst)))
+    (push element lst)))
 
 (defun pluck-item (el lst)
   (cdr (assoc el lst)))
