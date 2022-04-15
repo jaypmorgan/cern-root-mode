@@ -1,3 +1,5 @@
+Test that org-babel can even execute the code block and return the result:
+
 #+begin_src root
 printf("test\n");
 #+end_src
@@ -5,7 +7,19 @@ printf("test\n");
 #+RESULTS:
 : test
 
-#+begin_src root
+This code block tests that a session with the correct name can be created
+
+#+begin_src root :session testing
+printf("test\n");
+#+end_src
+
+#+RESULTS:
+: test
+
+Here I am testing that one can create a code block that declares and applies a
+function. In this we have many lines of statements.
+
+#+begin_src root :session new-session
 int testing(int a, int b) {
     return a + b;
 }
@@ -15,7 +29,15 @@ printf("The result is %d\n", result);
 #+end_src
 
 #+RESULTS:
-: esult);
+: sult);
 : The result is 3
 
-#+RESULTS
+Testing that values from one session do indeed carry onto the next code block. As
+long as the spawned process is not closed in between, this should be a given.
+
+#+begin_src root :session new-session
+testing(1, 2)
+#+end_src
+
+#+RESULTS:
+: (int) 3

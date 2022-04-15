@@ -44,7 +44,11 @@
 (defun org-babel-execute:root (body params)
   "Execute a C++ org-mode source code block with ROOT."
   (message "Executing C++ source code block with ROOT")
-  (org-babel-execute--root-temp-session body params))
+  (print params)
+  (let ((session (pluck-item :session params)))
+    (if (not (string= session "none"))  ;; handle the user set session parameter
+	(org-babel-execute--root-session session body params)
+      (org-babel-execute--root-temp-session body params))))
 
 (defun org-babel-root--cmdline-clean-result (string filename)
   (string-replace (format "\nProcessing %s...\n" filename) "" string))
@@ -68,6 +72,15 @@
 	  (org-babel-root--kill-session)
 	  output))
     (org-babel-root--kill-session)))
+
+(defun org-babel-execute--root-session (session body params)
+  (let ((root-buffer-name (make-earmuff session)))
+    (unless (get-buffer root-buffer-name)
+      (remembering-position
+       (run-root)))
+    (root--send-string root-buffer-name body)
+    (sleep-for 0.5)
+    (root--get-last-output)))
 
 (defun org-babel-execute--root-no-session (body params)
   (let* ((file (org-babel-temp-file "root" ".C"))

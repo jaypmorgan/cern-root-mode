@@ -69,6 +69,21 @@
       lst
     (push member lst)))
 
+(defun pluck-item (el lst)
+  (cdr (assoc el lst)))
+
+(defun make-earmuff (name)
+  (if (and (string= "*" (substring name 0 1))
+	   (string= "*" (substring name (1- (length name)))))
+      name
+    (format "*%s*" name)))
+
+(defun make-no-earmuff (name)
+  (if (and (string= "*" (substring name 0 1))
+	   (string= "*" (substring name (1- (length name)))))
+      (substring name 1 (1- (length name)))
+    name))
+
 (defvar root--backend-functions
   '((vterm . ((start-terminal . root--start-vterm)
 	      (send-function . root--send-vterm)
@@ -120,7 +135,7 @@
 (defun root--start-inferior ()
   "Run an inferior instance of ROOT"
   (let ((root-exe root-filepath)
-	(buffer (comint-check-proc "ROOT"))
+	(buffer (comint-check-proc (make-no-earmuff root-buffer-name)))
 	(created-vars (root--set-env-vars)))
     (pop-to-buffer-same-window
      (if (or buffer (not (derived-mode-p 'root-mode))
@@ -128,7 +143,7 @@
 	 (get-buffer-create (or buffer root-buffer-name))
        (current-buffer)))
     (unless buffer
-      (make-comint-in-buffer "ROOT" buffer root-exe nil root-command-options)
+      (make-comint-in-buffer (make-no-earmuff root-buffer-name) buffer root-exe nil root-command-options)
       (root-mode))
     (when created-vars
       (sleep-for 0.1)  ;; give enough time for ROOT to start before removing vars
