@@ -120,7 +120,8 @@
 (defun root--start-inferior ()
   "Run an inferior instance of ROOT"
   (let ((root-exe root-filepath)
-	(buffer (comint-check-proc "ROOT")))
+	(buffer (comint-check-proc "ROOT"))
+	(created-vars (root--set-env-vars)))
     (pop-to-buffer-same-window
      (if (or buffer (not (derived-mode-p 'root-mode))
 	     (comint-check-proc (current-buffer)))
@@ -128,11 +129,39 @@
        (current-buffer)))
     (unless buffer
       (make-comint-in-buffer "ROOT" buffer root-exe nil root-command-options)
-      (root-mode))))
+      (root-mode))
+    (when created-vars
+      (sleep-for 0.1)  ;; give enough time for ROOT to start before removing vars
+      (root--unset-env-vars))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Major mode & comint functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar root--rcfile "./.rootrc")
+
+(defun root--set-env-vars ()
+  "Setup the environment variables so that no colours or bold
+fonts will be used in the REPL. This prevents comint from
+creating duplicated input in trying to render the ascii colour
+codes.
+
+Function returns t if the variables have been set, else nil. This
+return value is very useful for deciding if the variables should
+be unset, as we will want not want to remove the user's existing
+rcfiles."
+  (if (not (file-exists-p root--rcfile))  ;; don't clobber existing rcfiles
+    (let ((vars (list "PomptColor" "TypeColor" "BracketColor" "BadBracketColor" "TabComColor"))
+	  (val  "default")
+	  (buf  (create-file-buffer root--rcfile)))
+      (with-current-buffer buf
+	(insert (apply 'concat (mapcar (lambda (v) (format "Rint.%s\t\t%s\n" v val)) vars)))
+	(write-file root--rcfile nil))
+      (kill-buffer buf))
+    nil))
+
+(defun root--unset-env-vars ()
+  (delete-file root--rcfile))
 
 (defun root--initialise ()
   (setq comint-process-echoes t
