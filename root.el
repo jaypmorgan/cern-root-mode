@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2022  Jay Morgan
 
-;; Author: Jay Morgan <jaymorgan@debian>
+;; Author: Jay Morgan <jay@morganwastaken.com>
 ;; Keywords: languages, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@
 (defmacro remembering-position (&rest body)
   `(save-window-excursion (save-excursion ,@body)))
 
-(defun pushnew (element lst)
+(defun push-new (element lst)
   (if (member element lst)
       lst
     (push member lst)))
@@ -73,13 +73,19 @@
   (cdr (assoc el lst)))
 
 (defun make-earmuff (name)
-  (if (and (string= "*" (substring name 0 1))
-	   (string= "*" (substring name (1- (length name)))))
+  "Give a string earmuffs, i.e. some-name -> *some-name*"
+  (if (or (not (stringp name))  ;; only defined for strings
+	  (= (length name) 0)   ;; but not empty strings
+	  (and (string= "*" (substring name 0 1))
+	       (string= "*" (substring name (1- (length name))))))
       name
     (format "*%s*" name)))
 
 (defun make-no-earmuff (name)
-  (if (and (string= "*" (substring name 0 1))
+  "Remove earmuffs from a string if it has them, *some-name* -> some-name"
+  (if (and (stringp name)
+	   (> (length name) 0)
+	   (string= "*" (substring name 0 1))
 	   (string= "*" (substring name (1- (length name)))))
       (substring name 1 (1- (length name)))
     name))
@@ -96,10 +102,10 @@
   "Mapping from terminal type to various specific functions")
 
 (defun root--get-functions-for-terminal (terminal)
-  (cdr (assoc terminal root--backend-functions)))
+  (pluck-item terminal root--backend-functions))
 
 (defun root--get-function-for-terminal (terminal function-type)
-  (cdr (assoc function-type (root--get-functions-for-terminal terminal))))
+  (pluck-item function-type (root--get-functions-for-terminal terminal)))
 
 (defun root--get-function-for-current-terminal (function-type)
   (root--get-function-for-terminal root-terminal-backend function-type))
@@ -201,7 +207,7 @@ rcfiles."
   (set (make-local-variable 'paragraph-start) root-prompt-regex)
   (set (make-local-variable 'comint-input-sender) 'root--send-string)
   (add-hook 'comint-dynamic-complete-functions 'root--comint-dynamic-completion-function nil 'local)
-  (set (make-local-variable 'company-backends) (pushnew 'company-capf company-backends))
+  (set (make-local-variable 'company-backends) (push-new 'company-capf company-backends))
   (add-hook 'root-mode-hook 'root--initialise))
 
 ;; (defun org-babel-execute:root (body params)
