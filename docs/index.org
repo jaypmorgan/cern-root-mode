@@ -5,9 +5,13 @@
 
 * Introduction
 
+This is the user-manual for the ROOT-mode package, the source code of which can be
+found at [[https://github.com/jaypmorgan/root-mode]]. In this manual, I detail how to
+install, use, customise, and help develop ROOT-mode.
+
 ROOT-mode is an Emacs major-mode for interacting with ROOT
-(https://root.cern/). Specifically, this package provides the
-facilities to run the ROOT command line interface/REPL.
+(https://root.cern/). Specifically, this package provides the facilities to run the
+ROOT command line interface/REPL.
 
 ** What is ROOT?
 
@@ -25,7 +29,14 @@ again, using the ROOT REPL.
 
 * Installation
 
-** Using =package.el=
+There are many competing ways to install packages with Emacs. Instead of enumerating
+all of them, I will demonstrate how to install ROOT-mode using to ends of the
+spectrum. The first will be installing ROOT-mode using a manual installation and will
+not require any other 3rd-party tools. The second way, that may be more common if you
+frequently customise your Emacs environment, will be to use =use-package= and
+=straight.el= to create a very concise configuration. 
+
+** Manual installation
 
 First you will need to clone the repository from Github:
 
@@ -33,16 +44,21 @@ First you will need to clone the repository from Github:
 git clone https://github.com/jaypmorgan/root-mode ~/.emacs.d/root-mode
 #+end_src
 
-After, in Emacs, you can load the package:
+After, in Emacs, you can load the package. First we're adding this cloned directory
+to the load-path. This will ensure that when we call =(load "root")=, Emacs will be
+able to find a =root.el=. After, we call =(require 'root-mode)= which will allow us to
+begin using the package straight away. 
 
 #+name: require-package
 #+begin_src emacs-lisp
-(load "~/.emacs.d/root-mode/root.el")
+(add-to-list 'load-path "~/.emacs.d/root-mode/")
+(load "root")
 (require 'root-mode)
 #+end_src
 
-If you want to configure some of the variables, these can be done using =setq=. Such
-as:
+If you want to configure some of the variables, these can be done using =setq=. One
+variable that you might want to customise is the =root-filepath=. This variable is the
+path (absolute or relative) to the ROOT REPL executable.
 
 #+name: variables
 #+begin_src emacs-lisp
@@ -62,10 +78,13 @@ would suggest that these key-bindings are only created within the C++ keymap.
 
 In summary we would have the following configuration:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :noweb yes
+<<require-package>>
+<<variables>>
+<<keybind>>
 #+end_src
 
-** Using =use-package=
+** Using =use-package= and =straight.el=
 
 The package is not on MELPA, so you can either clone the repository
 and manually load the file in Emacs, or use something like

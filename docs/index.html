@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-20 mer. 22:53 -->
+<!-- 2022-04-20 mer. 23:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ROOT-mode User Manual</title>
@@ -202,49 +202,55 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga3bddc1">1. Introduction</a>
+<li><a href="#org7a316cb">1. Introduction</a>
 <ul>
-<li><a href="#org74af696">1.1. What is ROOT?</a></li>
-<li><a href="#org2d351bf">1.2. What is ROOT-mode?</a></li>
+<li><a href="#org464a1b5">1.1. What is ROOT?</a></li>
+<li><a href="#org74b7cc5">1.2. What is ROOT-mode?</a></li>
 </ul>
 </li>
-<li><a href="#org2865582">2. Installation</a>
+<li><a href="#orgb0b76e2">2. Installation</a>
 <ul>
-<li><a href="#org6345264">2.1. Using <code>package.el</code></a></li>
-<li><a href="#orgaf8f717">2.2. Using <code>use-package</code></a></li>
+<li><a href="#org554f059">2.1. Manual installation</a></li>
+<li><a href="#org276b49d">2.2. Using <code>use-package</code> and <code>straight.el</code></a></li>
 </ul>
 </li>
-<li><a href="#orgf2a00a9">3. Using root-mode</a></li>
-<li><a href="#org59c3f1c">4. Customisation</a></li>
-<li><a href="#orgf14680d">5. Developing ROOT-mode</a>
+<li><a href="#orga61c322">3. Using root-mode</a></li>
+<li><a href="#orgd6e9c1c">4. Customisation</a></li>
+<li><a href="#org38253de">5. Developing ROOT-mode</a>
 <ul>
-<li><a href="#org5821f17">5.1. Variable index</a></li>
-<li><a href="#orgf50e4a9">5.2. Function index</a></li>
-<li><a href="#org0aa97df">5.3. Testing</a></li>
-<li><a href="#orgd400990">5.4. Contributions</a></li>
+<li><a href="#orgfc5a110">5.1. Variable index</a></li>
+<li><a href="#org5f93747">5.2. Function index</a></li>
+<li><a href="#org90315f4">5.3. Testing</a></li>
+<li><a href="#org0fe57fb">5.4. Contributions</a></li>
 </ul>
 </li>
-<li><a href="#org440e81f">6. Contact</a></li>
+<li><a href="#org2d36d92">6. Contact</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga3bddc1" class="outline-2">
-<h2 id="orga3bddc1"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-org7a316cb" class="outline-2">
+<h2 id="org7a316cb"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
+This is the user-manual for the ROOT-mode package, the source code of which can be
+found at <a href="https://github.com/jaypmorgan/root-mode">https://github.com/jaypmorgan/root-mode</a>. In this manual, I detail how to
+install, use, customise, and help develop ROOT-mode.
+</p>
+
+<p>
 ROOT-mode is an Emacs major-mode for interacting with ROOT
-(<a href="https://root.cern/">https://root.cern/</a>). Specifically, this package provides the
-facilities to run the ROOT command line interface/REPL.
+(<a href="https://root.cern/">https://root.cern/</a>). Specifically, this package provides the facilities to run the
+ROOT command line interface/REPL.
 </p>
 </div>
 
-<div id="outline-container-org74af696" class="outline-3">
-<h3 id="org74af696"><span class="section-number-3">1.1.</span> What is ROOT?</h3>
+<div id="outline-container-org464a1b5" class="outline-3">
+<h3 id="org464a1b5"><span class="section-number-3">1.1.</span> What is ROOT?</h3>
 </div>
 
-<div id="outline-container-org2d351bf" class="outline-3">
-<h3 id="org2d351bf"><span class="section-number-3">1.2.</span> What is ROOT-mode?</h3>
+<div id="outline-container-org74b7cc5" class="outline-3">
+<h3 id="org74b7cc5"><span class="section-number-3">1.2.</span> What is ROOT-mode?</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
@@ -256,7 +262,7 @@ again, using the ROOT REPL.
 </p>
 
 
-<div id="orgcf95a24" class="figure">
+<div id="org0c4cedb" class="figure">
 <p><img src="./images/brief-example.gif" alt="brief-example.gif" />
 </p>
 <p><span class="figure-number">Figure 1: </span>A brief example of what we want ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.</p>
@@ -265,12 +271,21 @@ again, using the ROOT REPL.
 </div>
 </div>
 
-<div id="outline-container-org2865582" class="outline-2">
-<h2 id="org2865582"><span class="section-number-2">2.</span> Installation</h2>
+<div id="outline-container-orgb0b76e2" class="outline-2">
+<h2 id="orgb0b76e2"><span class="section-number-2">2.</span> Installation</h2>
 <div class="outline-text-2" id="text-2">
+<p>
+There are many competing ways to install packages with Emacs. Instead of enumerating
+all of them, I will demonstrate how to install ROOT-mode using to ends of the
+spectrum. The first will be installing ROOT-mode using a manual installation and will
+not require any other 3rd-party tools. The second way, that may be more common if you
+frequently customise your Emacs environment, will be to use <code>use-package</code> and
+<code>straight.el</code> to create a very concise configuration. 
+</p>
 </div>
-<div id="outline-container-org6345264" class="outline-3">
-<h3 id="org6345264"><span class="section-number-3">2.1.</span> Using <code>package.el</code></h3>
+
+<div id="outline-container-org554f059" class="outline-3">
+<h3 id="org554f059"><span class="section-number-3">2.1.</span> Manual installation</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 First you will need to clone the repository from Github:
@@ -282,22 +297,27 @@ First you will need to clone the repository from Github:
 </div>
 
 <p>
-After, in Emacs, you can load the package:
+After, in Emacs, you can load the package. First we're adding this cloned directory
+to the load-path. This will ensure that when we call <code>(load "root")</code>, Emacs will be
+able to find a <code>root.el</code>. After, we call <code>(require 'root-mode)</code> which will allow us to
+begin using the package straight away. 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org0697018">(load <span style="color: #008000;">"~/.emacs.d/root-mode/root.el"</span>)
+<pre class="src src-emacs-lisp" id="orgb053d25">(add-to-list 'load-path <span style="color: #008000;">"~/.emacs.d/root-mode/"</span>)
+(load <span style="color: #008000;">"root"</span>)
 (<span style="color: #0000FF;">require</span> '<span style="color: #D0372D;">root-mode</span>)
 </pre>
 </div>
 
 <p>
-If you want to configure some of the variables, these can be done using <code>setq</code>. Such
-as:
+If you want to configure some of the variables, these can be done using <code>setq</code>. One
+variable that you might want to customise is the <code>root-filepath</code>. This variable is the
+path (absolute or relative) to the ROOT REPL executable.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org03565f5">(<span style="color: #0000FF;">setq</span> root-filepath <span style="color: #008000;">"/path/to/root"</span>
+<pre class="src src-emacs-lisp" id="orgd01ce1f">(<span style="color: #0000FF;">setq</span> root-filepath <span style="color: #008000;">"/path/to/root"</span>
       root-terminal-backend 'vterm)
 </pre>
 </div>
@@ -308,7 +328,7 @@ would suggest that these key-bindings are only created within the C++ keymap.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org96f0b32">(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-c"</span>) 'root-eval-defun-maybe)
+<pre class="src src-emacs-lisp" id="org2b4fa10">(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-c"</span>) 'root-eval-defun-maybe)
 (define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-b"</span>) 'root-eval-buffer)
 (define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-l"</span>) 'root-eval-file)
 </pre>
@@ -319,14 +339,21 @@ In summary we would have the following configuration:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #008000;">"~/.emacs.d/root-mode/"</span>)
+(load <span style="color: #008000;">"root"</span>)
+(<span style="color: #0000FF;">require</span> '<span style="color: #D0372D;">root-mode</span>)
+(<span style="color: #0000FF;">setq</span> root-filepath <span style="color: #008000;">"/path/to/root"</span>
+      root-terminal-backend 'vterm)
+(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-c"</span>) 'root-eval-defun-maybe)
+(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-b"</span>) 'root-eval-buffer)
+(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-l"</span>) 'root-eval-file)
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgaf8f717" class="outline-3">
-<h3 id="orgaf8f717"><span class="section-number-3">2.2.</span> Using <code>use-package</code></h3>
+<div id="outline-container-org276b49d" class="outline-3">
+<h3 id="org276b49d"><span class="section-number-3">2.2.</span> Using <code>use-package</code> and <code>straight.el</code></h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 The package is not on MELPA, so you can either clone the repository
@@ -352,8 +379,8 @@ the package with straight.el:
 </div>
 
 
-<div id="outline-container-orgf2a00a9" class="outline-2">
-<h2 id="orgf2a00a9"><span class="section-number-2">3.</span> Using root-mode</h2>
+<div id="outline-container-orga61c322" class="outline-2">
+<h2 id="orga61c322"><span class="section-number-2">3.</span> Using root-mode</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 When in a C++ major-mode buffer, enter the command (using <code>M-x</code>): <code>run-root</code>. This will
@@ -368,8 +395,8 @@ then create a new ROOT REPL in the other window.
 </div>
 </div>
 
-<div id="outline-container-org59c3f1c" class="outline-2">
-<h2 id="org59c3f1c"><span class="section-number-2">4.</span> Customisation</h2>
+<div id="outline-container-orgd6e9c1c" class="outline-2">
+<h2 id="orgd6e9c1c"><span class="section-number-2">4.</span> Customisation</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 There are only a few variables provided by the package:
@@ -401,8 +428,8 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 </div>
 
 
-<div id="outline-container-orgf14680d" class="outline-2">
-<h2 id="orgf14680d"><span class="section-number-2">5.</span> Developing ROOT-mode</h2>
+<div id="outline-container-org38253de" class="outline-2">
+<h2 id="org38253de"><span class="section-number-2">5.</span> Developing ROOT-mode</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
@@ -410,11 +437,11 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 </div>
 </div>
 
-<div id="outline-container-org5821f17" class="outline-3">
-<h3 id="org5821f17"><span class="section-number-3">5.1.</span> Variable index</h3>
+<div id="outline-container-orgfc5a110" class="outline-3">
+<h3 id="orgfc5a110"><span class="section-number-3">5.1.</span> Variable index</h3>
 </div>
-<div id="outline-container-orgf50e4a9" class="outline-3">
-<h3 id="orgf50e4a9"><span class="section-number-3">5.2.</span> Function index</h3>
+<div id="outline-container-org5f93747" class="outline-3">
+<h3 id="org5f93747"><span class="section-number-3">5.2.</span> Function index</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 Below is listed the various commands provided by the package.
@@ -499,8 +526,8 @@ Below is listed the various commands provided by the package.
 </div>
 </div>
 
-<div id="outline-container-org0aa97df" class="outline-3">
-<h3 id="org0aa97df"><span class="section-number-3">5.3.</span> Testing</h3>
+<div id="outline-container-org90315f4" class="outline-3">
+<h3 id="org90315f4"><span class="section-number-3">5.3.</span> Testing</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 To test the functionality of the package, some unit tests have been
@@ -523,19 +550,19 @@ using:
 </div>
 
 
-<div id="outline-container-orgd400990" class="outline-3">
-<h3 id="orgd400990"><span class="section-number-3">5.4.</span> Contributions</h3>
+<div id="outline-container-org0fe57fb" class="outline-3">
+<h3 id="org0fe57fb"><span class="section-number-3">5.4.</span> Contributions</h3>
 </div>
 </div>
 
-<div id="outline-container-org440e81f" class="outline-2">
-<h2 id="org440e81f"><span class="section-number-2">6.</span> Contact</h2>
+<div id="outline-container-org2d36d92" class="outline-2">
+<h2 id="org2d36d92"><span class="section-number-2">6.</span> Contact</h2>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2022-04-20 mer. 00:00</p>
 <p class="author">Author: Jay Morgan</p>
-<p class="date">Created: 2022-04-20 mer. 22:53</p>
+<p class="date">Created: 2022-04-20 mer. 23:07</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
