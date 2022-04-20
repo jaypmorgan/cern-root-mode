@@ -1,0 +1,41 @@
+body {
+    line-height: 25px;
+    font-family: 'Arial', sans-serif;
+}
+
+#content {
+    max-width: 80ch;
+    margin-left: 5%;
+}
+
+h1,h2 {
+    margin-top: 50px;
+}
+
+h3,h4,h5 {
+    margin-top: 30px;
+}
+
+#postamble {
+    margin-top: 100px;
+    margin-left: 5%;
+}
+
+#postamble p, #preamble p {
+    line-height: normal;
+    color: gray;
+}
+
+.figure {
+    padding: 0em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.figure p:nth-child(2) {
+    text-align: left;
+    font-style: italic;
+    font-size: 0.9em;
+    max-width: 650px;
+    padding-left: 1em;
+}

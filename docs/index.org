@@ -1,0 +1,173 @@
+#+title: ROOT-mode User Manual
+#+author: Jay Morgan
+#+date: <2022-04-20 mer.>
+#+html_head: <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+
+* Introduction
+
+ROOT-mode is an Emacs major-mode for interacting with ROOT
+(https://root.cern/). Specifically, this package provides the
+facilities to run the ROOT command line interface/REPL.
+
+** What is ROOT?
+
+** What is ROOT-mode?
+
+ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
+with the ROOT REPL. In this, we have provided various functions such as: creating a
+new REPL, sending lines/function definitions/evaluating files in this REPL. In
+addition to working with C++ files. This functionality is extended to org-mode. In
+this way, we may create C++ source code blocks and evaluate their contents, once
+again, using the ROOT REPL.
+
+#+CAPTION: A brief example of what we want ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.
+[[../tests/brief-example.gif]]
+
+* Installation
+
+** Using =package.el=
+
+First you will need to clone the repository from Github:
+
+#+begin_src bash
+git clone https://github.com/jaypmorgan/root-mode ~/.emacs.d/root-mode
+#+end_src
+
+After, in Emacs, you can load the package:
+
+#+name: require-package
+#+begin_src emacs-lisp
+(load "~/.emacs.d/root-mode/root.el")
+(require 'root-mode)
+#+end_src
+
+If you want to configure some of the variables, these can be done using =setq=. Such
+as:
+
+#+name: variables
+#+begin_src emacs-lisp
+(setq root-filepath "/path/to/root"
+      root-terminal-backend 'vterm)
+#+end_src
+
+You may also want to configure some key-bindings to the commonly used functions. I
+would suggest that these key-bindings are only created within the C++ keymap.
+
+#+name: keybind
+#+begin_src emacs-lisp
+(define-key 'c++-mode-map (kbd "C-c C-c") 'root-eval-defun-maybe)
+(define-key 'c++-mode-map (kbd "C-c C-b") 'root-eval-buffer)
+(define-key 'c++-mode-map (kbd "C-c C-l") 'root-eval-file)
+#+end_src
+
+In summary we would have the following configuration:
+
+#+begin_src emacs-lisp
+#+end_src
+
+** Using =use-package=
+
+The package is not on MELPA, so you can either clone the repository
+and manually load the file in Emacs, or use something like
+use-package/straight. Here is one example of installing/configuring
+the package with straight.el:
+
+#+begin_src emacs-lisp
+(use-package root-mode
+  :bind (:map c++-mode-map
+	     (("C-c C-c" . root-eval-defun)
+	      ("C-c C-b" . root-eval-buffer)
+	      ("C-c C-l" . root-eval-file)
+	      ("C-c C-r" . root-eval-region)))
+  :straight (root-mode :type git :host github :repo "jaypmorgan/root-mode")
+  :config
+  (setq root-filepath "/path/to/root"))
+#+end_src
+
+
+* Using root-mode
+
+When in a C++ major-mode buffer, enter the command (using =M-x=): =run-root=. This will
+start a new instance of the ROOT REPL in the same window.
+
+If you want to create a new window for the ROOT REPL, instead of using =run-root=,
+enter the command: =run-root-other-window=. This will first split the window sensibly,
+then create a new ROOT REPL in the other window.
+
+* Customisation
+
+There are only a few variables provided by the package:
+
+- *root-filepath* -- (string, default ="root"=) this is the
+  absolute/relative path to the root executable. This could be left as
+  the default "root" value if ROOT is available on your $PATH.
+- *root-command-option* -- (string, default =""=) these are the
+  command line options used when starting ROOT. By default there are
+  no options.
+- *root-prompt-regex* -- (string, default ="^\\[[0-9;^k]+m?"=) this
+  is the regular expression used to find the input prompt of the ROOT
+  REPL. If there is a customised prompt, this will need to be updated
+  to suit the customisation.
+- *root-buffer-name* -- (string, default ="*ROOT*"=) what to call
+  the ROOT repl buffer when it starts. This could be left as the
+  default =*ROOT*=, but its there for you to modify as you please.
+- *root-terminal-backend* -- (symbol, default ='terminal=) the
+  terminal emulator to run the ROOT instance in. There are only two
+  current defined [=vterm=, =inferior=]. By default, the terminal
+  backend is set to =inferior=. Though, there is still some issues in
+  getting the auto-complete to work correctly. If you really need
+  auto-complete, I would recommend switching the backend to ='vterm=
+  (requires you've already installed vterm).
+
+
+* Developing ROOT-mode
+
+#+begin_src emacs-lisp
+
+#+end_src
+
+** Variable index
+** Function index
+
+Below is listed the various commands provided by the package.
+
+| Command                         | Description                                                                                                        |
+|---------------------------------+--------------------------------------------------------------------------------------------------------------------|
+| =run-root=                      | Start the ROOT REPL in the same window.                                                                            |
+| =run-root-other-window=         | Start the ROOT REPL in a different window.                                                                         |
+| =root-switch-to-repl=           | Move the cursor to the ROOT REPL.                                                                                  |
+| =root-eval-region=              | Evaluate a marked region in ROOT.                                                                                  |
+| =root-eval-line=                | Evaluate this line in the REPL.                                                                                    |
+| =root-eval-defun=               | Evaluate the current function in ROOT (current as defined by cursor position).                                     |
+| =root-eval-defun-maybe=         | If the cursor is within a function declaration, then evaluate this function, else we'll evaluate this single line. |
+| =root-eval-buffer=              | Evaluate the current buffer in ROOT.                                                                               |
+| =root-eval-file=                | Evaluate a file (using the '.L' syntax), prompt for a file.                                                        |
+| =root-change-working-directory= | Change the working directory of the root session, prompt for a directory.                                          |
+| =root-list-input-history=       | List the previously input statements and for selection.                                                            |
+|                                 |                                                                                                                    |
+
+** Testing
+
+
+To test the functionality of the package, some unit tests have been
+stored in the =tests/= directory. To run these unit tests, you can
+either evaluate the specific buffer in Emacs and run =ert= (see
+<https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html>
+for more information), or you can them all from the command line
+using:
+
+#+begin_src bash
+emacs -batch \
+	-l ert \
+	-l root.el \
+	-l tests/test-root.el \
+	-f ert-run-tests-batch-and-exit
+#+END_SRC
+
+
+** Contributions
+
+* Contact
+
+
+
