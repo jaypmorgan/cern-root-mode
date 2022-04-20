@@ -21,7 +21,7 @@ this way, we may create C++ source code blocks and evaluate their contents, once
 again, using the ROOT REPL.
 
 #+CAPTION: A brief example of what we want ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.
-[[../tests/brief-example.gif]]
+[[./images/brief-example.gif]]
 
 * Installation
 

@@ -4,7 +4,7 @@ ROOT-mode is an Emacs major-mode for interacting with ROOT
 (https://root.cern/). Specifically, this package provides the
 facilities to run the ROOT command line interface/REPL.
 
-![Example demonstration](./tests/brief-example.gif)
+![Example demonstration](./docs/images/brief-example.gif)
 
 ## Installation & Configuration
 
@@ -69,7 +69,12 @@ Below is listed the various commands provided by the package.
 
 ## Running tests
 
-To test the functionality of the package, some unit tests have been stored in the `tests/` directory. To run these unit tests, you can either evaluate the specific buffer in Emacs and run `ert` (see <https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html> for more information), or you can them all from the command line using:
+To test the functionality of the package, some unit tests have been
+stored in the `tests/` directory. To run these unit tests, you can
+either evaluate the specific buffer in Emacs and run `ert` (see
+<https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html>
+for more information), or you can them all from the command line
+using:
 
 ```bash
 emacs -batch \
