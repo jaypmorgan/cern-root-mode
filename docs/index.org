@@ -15,6 +15,12 @@ ROOT command line interface/REPL.
 
 ** What is ROOT?
 
+#+begin_quote
+ROOT enables statistically sound scientific analyses and visualization of large
+amounts of data: today, more than 1 exabyte (1,000,000,000 gigabyte) are stored in
+ROOT files. The Higgs was found with ROOT!
+#+end_quote
+
 ** What is ROOT-mode?
 
 ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
@@ -29,12 +35,16 @@ again, using the ROOT REPL.
 
 * Installation
 
+#+begin_verse
+I am in the process of submitting the package to MELPA, but in the meantime, we will have to rely on the manual installation or specify the github repository via straight.
+#+end_verse
+
 There are many competing ways to install packages with Emacs. Instead of enumerating
 all of them, I will demonstrate how to install ROOT-mode using to ends of the
 spectrum. The first will be installing ROOT-mode using a manual installation and will
 not require any other 3rd-party tools. The second way, that may be more common if you
 frequently customise your Emacs environment, will be to use =use-package= and
-=straight.el= to create a very concise configuration. 
+=straight.el= to create a very concise configuration.
 
 ** Manual installation
 
@@ -187,6 +197,3 @@ emacs -batch \
 ** Contributions
 
 * Contact
-
-
-

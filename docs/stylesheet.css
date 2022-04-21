@@ -1,6 +1,6 @@
 body {
     line-height: 25px;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Tahoma', sans-serif;
 }
 
 #content {
@@ -10,6 +10,13 @@ body {
 
 h1,h2 {
     margin-top: 50px;
+}
+
+h2 {
+    margin-left: -5%;
+    border-bottom: 1px solid gray;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 h3,h4,h5 {
@@ -38,4 +45,27 @@ h3,h4,h5 {
     font-size: 0.9em;
     max-width: 650px;
     padding-left: 1em;
+}
+
+blockquote {
+    font-style: italic;
+    border-left: 2px solid gray;
+    padding-left: 20px;
+}
+
+p.verse {   
+    font-size: 0.9em;
+    font-style: italic;
+    color: #49516c;
+    margin-left: 0%;
+}
+
+@media only screen and (min-width: 1200px) {
+    p.verse {
+	float: right;
+	position: absolute;
+	width: 200px;
+	margin: auto;
+	left: 103ch;
+    }
 }
