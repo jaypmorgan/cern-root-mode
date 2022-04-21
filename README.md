@@ -83,3 +83,17 @@ emacs -batch \
 	-l tests/test-root.el \
 	-f ert-run-tests-batch-and-exit
 ```
+
+## Comparison with other tools
+
+- **inferior-cling**: https://github.com/brianqq/inferior-cling. This
+  package hasn't been updated in quite a while, and is light on
+  functionality.  ROOT-mode attempts to go beyond this to make the
+  process of interacting with the REPL more seamless.  There are also
+  other ongoing issues such as duplicated input
+  (https://root-forum.cern.ch/t/interactive-input-in-emacs-is-echoed-progressively/24113)
+  in dumb terminals (https://github.com/root-project/cling/pull/99)
+  which have yet to be merged in cling. ROOT-mode solves these
+  problems while we're waiting for the pull-request to be
+  accepted. ROOT-mode also aims to support org-babel to allow one to
+  execute C++ source code blocks from within an org-mode document.
