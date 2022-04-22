@@ -29,8 +29,10 @@
 
 ;;; Code:
 
+(require 'ob) ;; org-babel
 (require 'comint)
 (require 'vterm nil 'noerror)
+(require 'cl-lib)
 
 (defcustom root nil
   "Major-mode for running C++ code with ROOT"
@@ -93,6 +95,11 @@
       (substring name 1 (1- (length name)))
     name))
 
+(defun ->> (&rest body)
+  (cl-reduce (lambda (prev next) (funcall (eval next) prev))
+	     (cdr body)
+	     :initial-value (eval (car body))))
+
 (defvar root--backend-functions
   '((vterm . ((start-terminal . root--start-vterm)
 	      (send-function . root--send-vterm)
@@ -127,10 +134,25 @@
   "Send a string to an inferior REPL."
   (comint-send-string proc (format "%s\n" input)))
 
+(defun root--remove-comments (input)
+  (with-temp-buffer
+    (c++-mode)
+    (insert input)
+    (comment-kill (count-lines (point-min) (point-max)))
+    (buffer-string-no-properties)))
+
+;; (defun root--preinput-clean (input)
+;;   (->>
+;;    `(string-replace "\n" " " (format "%s" ,input)) ;; send all input on the same line
+;;    `(lambda (s) (string-replace "\t" "" s))  ;; remove un-necessary tabs
+;;    `(lambda (s)  ;; handle preprocessor directives (must be called on their own line).
+;;       (replace-regexp-in-string "\\(#[a-z_]+\\(?:\s\\(?:<.*?>\\|\".*?\"\\)\\)?\\)"
+;; 				"\\1\n"
+;; 				s))))
+
 (defun root--preinput-clean (input)
-  (string-replace
-   "\t" ""
-   (string-replace "\n" " " (format "%s" input))))
+  ;; move the template definition onto the same line as the function declaration
+  (replace-regexp-in-string "template<\\(.*\\)>\n" "template<\\1>" (format "%s" input)))
 
 (defun root--send-string (proc input)
   "Send a string to the ROOT repl."
@@ -272,6 +294,65 @@ rcfiles."
 	(list beg end root--keywords . nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Org-babel definitions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;(org-babel-add-interpreter "root")
+(add-to-list 'org-src-lang-modes '("root" . c++))
+
+;; no session, create temporary file and execute with macro file
+
+(defun org-babel-execute:root (body params)
+  "Execute a C++ org-mode source code block with ROOT."
+  (message "Executing C++ source code block with ROOT")
+  (print params)
+  (let ((session (pluck-item :session params)))
+    (if (not (string= session "none"))  ;; handle the user set session parameter
+	(org-babel-execute--root-session session body params)
+      (org-babel-execute--root-temp-session body params))))
+
+(defun org-babel-root--cmdline-clean-result (string filename)
+  (string-replace (format "\nProcessing %s...\n" filename) "" string))
+
+(defun org-babel-root--cmdline-simple-wrapper (body func)
+  (format "void %s() {\n%s\n}" func body))
+
+(defun org-babel-root--kill-session ()
+  (root--send-string root-buffer-name ".q"))
+
+(defun org-babel-root--start-session ()
+  (remembering-position (run-root)))
+
+(defun org-babel-execute--root-temp-session (body params)
+  (unwind-protect
+      (progn
+	(org-babel-root--start-session)
+	(root--send-string root-buffer-name body)
+	(sleep-for 0.5)  ;; wait for the output to be printed in the REPL
+	(let ((output (root--get-last-output)))
+	  (org-babel-root--kill-session)
+	  output))
+    (org-babel-root--kill-session)))
+
+(defun org-babel-execute--root-session (session body params)
+  (let ((root-buffer-name (make-earmuff session)))
+    (unless (get-buffer root-buffer-name)
+      (remembering-position
+       (run-root)))
+    (root--send-string root-buffer-name body)
+    (sleep-for 0.5)
+    (root--get-last-output)))
+
+(defun org-babel-execute--root-no-session (body params)
+  (let* ((file (org-babel-temp-file "root" ".C"))
+	 (func (string-replace ".C" "" (car (last (split-string file "/")))))
+	 (cmd  (format "%s -b -l -q %s" root-filepath file)))
+    (org-babel-with-temp-filebuffer file
+      (insert (org-babel-root--cmdline-simple-wrapper body func))
+      (save-buffer))
+    (org-babel-root--cmdline-clean-result (org-babel-eval cmd "") file)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; User functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -304,6 +385,10 @@ rcfiles."
   (let ((string (format "%s" (buffer-substring beg end))))
     (root-switch-to-repl)
     (root--send-string root-buffer-name string)))
+
+(defun root-eval-string (string)
+  "Send and evaluate a string in the ROOT REPL."
+  (root--send-string root-buffer-name string))
 
 (defun root-eval-line ()
   "Evaluate this line in ROOT"
