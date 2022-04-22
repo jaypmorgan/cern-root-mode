@@ -55,10 +55,11 @@ Below is listed the various commands provided by the package.
 | Command                         | Description                                                                                                        |
 |:--------------------------------|:-------------------------------------------------------------------------------------------------------------------|
 | `run-root`                      | Start the ROOT REPL in the same window.                                                                            |
-| `run-root-other-window`         | Start the ROOT REPL in a different window.                                                                        |
+| `run-root-other-window`         | Start the ROOT REPL in a different window.                                                                         |
 | `root-switch-to-repl`           | Move the cursor to the ROOT REPL.                                                                                  |
 | `root-eval-region`              | Evaluate a marked region in ROOT.                                                                                  |
 | `root-eval-line`                | Evaluate this line in the REPL.                                                                                    |
+| `root-eval-string`              | (non-interactive function) Evaluate a string in the REPL.                                                          |
 | `root-eval-defun`               | Evaluate the current function in ROOT (current as defined by cursor position).                                     |
 | `root-eval-defun-maybe`         | If the cursor is within a function declaration, then evaluate this function, else we'll evaluate this single line. |
 | `root-eval-buffer`              | Evaluate the current buffer in ROOT.                                                                               |

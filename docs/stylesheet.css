@@ -60,6 +60,41 @@ p.verse {
     margin-left: 0%;
 }
 
+.fundoc {
+
+}
+
+.fundoc_header {
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.fundoc_name {
+    font-family: "Courier";
+    border-bottom: 2px solid gray;
+}
+
+.fundoc_arglist {
+    font-family: "Courier";
+}
+
+.fundoc_arglist::before {
+    content: "[";
+}
+
+.fundoc_arglist::after {
+    content: "]";
+}
+
+.fundoc_doc {
+    display: block;
+    margin-left: 20px;
+}
+
 @media only screen and (min-width: 1200px) {
     p.verse {
 	float: right;

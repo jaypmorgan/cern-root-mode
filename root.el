@@ -141,15 +141,6 @@
     (comment-kill (count-lines (point-min) (point-max)))
     (buffer-string-no-properties)))
 
-;; (defun root--preinput-clean (input)
-;;   (->>
-;;    `(string-replace "\n" " " (format "%s" ,input)) ;; send all input on the same line
-;;    `(lambda (s) (string-replace "\t" "" s))  ;; remove un-necessary tabs
-;;    `(lambda (s)  ;; handle preprocessor directives (must be called on their own line).
-;;       (replace-regexp-in-string "\\(#[a-z_]+\\(?:\s\\(?:<.*?>\\|\".*?\"\\)\\)?\\)"
-;; 				"\\1\n"
-;; 				s))))
-
 (defun root--preinput-clean (input)
   ;; move the template definition onto the same line as the function declaration
   (replace-regexp-in-string "template<\\(.*\\)>\n" "template<\\1>" (format "%s" input)))
