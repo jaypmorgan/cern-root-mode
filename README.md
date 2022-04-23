@@ -67,6 +67,53 @@ Below is listed the various commands provided by the package.
 | `root-change-working-directory` | Change the working directory of the root session, prompt for a directory.                                          |
 | `root-list-input-history`       | List the previously input statements and for selection.                                                            |
 
+## Org-mode
+
+ROOT-mode provides the functionality to execute C++ source code blocks
+using the ROOT REPL instead of the default C++ executable. This can
+make the process of writing C++ in org-mode more fluid.
+
+To write C++ code blocks that then are executed using ROOT, specify
+`root` as the language in the `begin_src` header. For example:
+
+```
+#+begin_src root
+// write your code here.
+#+end_src
+```
+
+Upon executing this code block (such as with `C-c C-c`), this code
+will be executed in the ROOT REPL instead.
+
+Code can be written and re-used over multiple code blocks with the use
+of the `:session` argument (with an optional name). By providing this
+argument, a ROOT REPL instance will be created that can be used within
+the context of many source blocks. For example, let's create another
+code block with this session argument:
+
+```
+#+begin_src root :session *my-root-session*
+void test() {
+	// print something
+	printf("This is something");
+}
+#+end_src
+```
+
+When we first run this code block, ROOT-mode will create a new
+instance of the ROOT REPL in the buffer named '*my-root-session*' (you
+can switch to this buffer if you want to interact directly outside of
+the code blocks!). This means that, by specifying the same argument to
+a different code block, we can call this `test` function.
+
+```
+#+begin_src root :session *my-root-session*
+test();  // call the test function
+#+end_src
+```
+
+This gets us a long way to achieving the same functionality as `root
+--notebook`, but in Emacs.
 
 ## Running tests
 
