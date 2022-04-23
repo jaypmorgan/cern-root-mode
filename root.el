@@ -172,6 +172,49 @@
       (root--unset-env-vars))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Input buffer
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun root--make-text-property (input)
+  (propertize "root_input_2"
+	      'buffer-state input
+	      'face 'kaiti-red
+	      'read-only t))
+
+(defun root--text-property-get-contents (text)
+  (get-text-property 0 'buffer-state text))
+
+(defun root--make-temporary-buffer (text)
+  (remembering-position
+   (let* ((temp-file (format "%s.C" (make-temp-file "root")))
+	  (buf       (find-file temp-file)))
+     (switch-to-buffer buf) 
+     (insert (root--text-property-get-contents text))
+     (write-file temp-file nil)
+     (kill-buffer buf)
+     temp-file)))
+
+(defun root--send-input-buffer (input)
+  (let* ((text (root--make-text-property input))
+	 (file (root--make-temporary-buffer text)))
+    (remembering-position
+     (root-switch-to-repl)
+     (let ((pos (point)))
+       (print pos)
+       (root-eval-file file)
+       (sleep-for 0.5)
+       (end-of-buffer)
+       (let ((end-post (point)))
+	 (delete-region pos end-post)
+	 (end-of-buffer)
+	 (let ((new-point (point)))
+	   (root--send-string root-buffer-name "\n")
+	   (sleep-for 0.5)
+	   (goto-char new-point)
+	   (insert text)
+	   (end-of-buffer)))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Major mode & comint functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -288,11 +331,11 @@ rcfiles."
 ;; Org-babel definitions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;(org-babel-add-interpreter "root")
-(add-to-list 'org-src-lang-modes '("root" . c++))
+;;;###autoload
+(with-eval-after-load 'org
+  (add-to-list 'org-src-lang-modes '("root" . c++)))
 
-;; no session, create temporary file and execute with macro file
-
+;;;###autoload
 (defun org-babel-execute:root (body params)
   "Execute a C++ org-mode source code block with ROOT."
   (message "Executing C++ source code block with ROOT")
