@@ -29,40 +29,43 @@
 
 ;;; Code:
 
+(require 's)
 (require 'ob) ;; org-babel
 (require 'comint)
-(require 'vterm nil 'noerror)
 (require 'cl-lib)
+(require 'cc-cmds)
+(require 'vterm nil 'noerror)
 
-(defcustom root nil
+(defcustom root-mode nil
   "Major-mode for running C++ code with ROOT"
-  :group 'languages)
+  :group 'languages
+  :type 'mode)
 
 (defcustom root-filepath "root"
   "Path to the ROOT executable"
   :type 'string
-  :group 'root)
+  :group 'root-mode)
 
 (defcustom root-command-options ""
   "Command line options for running ROOT"
   :type 'string
-  :group 'root)
+  :group 'root-mode)
 
 (defcustom root-prompt-regex "^\\(?:root \\(?:(cont'ed, cancel with .@) \\)?\\[[0-9]+\\]\s?\\)"
   "Regular expression to find prompt location in ROOT-repl."
   :type 'string
-  :group 'root)
+  :group 'root-mode)
 
 (defcustom root-terminal-backend 'inferior
   "Type of terminal to use when running ROOT"
   :type 'symbol
   :options '(inferior vterm)
-  :group 'root)
+  :group 'root-mode)
 
 (defcustom root-buffer-name "*ROOT*"
   "Name of the newly create buffer for ROOT"
   :type 'string
-  :group 'root)
+  :group 'root-mode)
 
 ;;; end of user variables
 
@@ -127,19 +130,13 @@
   "Send a string to the vterm REPL."
   (remembering-position
    (root-switch-to-repl)
-   (vterm-send-string input)
-   (vterm-send-return)))
+   (when (fboundp 'vterm-send-string)
+     (vterm-send-string input)
+     (vterm-send-return))))
 
 (defun root--send-inferior (proc input)
   "Send a string to an inferior REPL."
   (comint-send-string proc (format "%s\n" input)))
-
-(defun root--remove-comments (input)
-  (with-temp-buffer
-    (c++-mode)
-    (insert input)
-    (comment-kill (count-lines (point-min) (point-max)))
-    (buffer-string-no-properties)))
 
 (defun root--preinput-clean (input)
   ;; move the template definition onto the same line as the function declaration
@@ -203,16 +200,16 @@
        (print pos)
        (root-eval-file file)
        (sleep-for 0.5)
-       (end-of-buffer)
+       (goto-char (point-max))
        (let ((end-post (point)))
 	 (delete-region pos end-post)
-	 (end-of-buffer)
+	 (goto-char (point-max))
 	 (let ((new-point (point)))
 	   (root--send-string root-buffer-name "\n")
 	   (sleep-for 0.5)
 	   (goto-char new-point)
 	   (insert text)
-	   (end-of-buffer)))))))
+	   (goto-char (point-max))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Major mode & comint functions
@@ -265,8 +262,6 @@ rcfiles."
   (set (make-local-variable 'paragraph-separate) "\\'")
   (set (make-local-variable 'paragraph-start) root-prompt-regex)
   (set (make-local-variable 'comint-input-sender) 'root--send-string)
-  (add-hook 'comint-dynamic-complete-functions 'root--comint-dynamic-completion-function nil 'local)
-  (set (make-local-variable 'company-backends) (push-new 'company-capf company-backends))
   (add-hook 'root-mode-hook 'root--initialise))
 
 ;; (defun org-babel-execute:root (body params)
@@ -285,11 +280,11 @@ rcfiles."
   ;; TODO: needs improvement to better capture the last output
   (remembering-position
    (root-switch-to-repl)
-   (end-of-buffer)
+   (goto-char (point-max))
    (let* ((regex (format "%s.*" (substring root-prompt-regex 1)))
 	  (np (re-search-backward regex))
 	  (pp (progn (re-search-backward regex)
-		    (next-line)
+		    (forward-line)
 		    (point))))
      (buffer-substring-no-properties pp np))))
 
@@ -311,7 +306,7 @@ rcfiles."
 (defun root--get-completions-from-buffer ()
   (with-current-buffer root--completion-buffer-name
     (while (not comint-redirect-completed)
-      (sleep 0.01))
+      (sleep-for 0.01))
     (setq root--keywords (split-string (root--remove-ansi-escape-codes (buffer-string)) "\n"))))
 
 (defun root--comint-dynamic-completion-function ()
@@ -346,7 +341,7 @@ rcfiles."
       (org-babel-execute--root-temp-session body params))))
 
 (defun org-babel-root--cmdline-clean-result (string filename)
-  (string-replace (format "\nProcessing %s...\n" filename) "" string))
+  (replace-regexp-in-string (format "\nProcessing %s...\n" filename) "" string))
 
 (defun org-babel-root--cmdline-simple-wrapper (body func)
   (format "void %s() {\n%s\n}" func body))
@@ -358,6 +353,7 @@ rcfiles."
   (remembering-position (run-root)))
 
 (defun org-babel-execute--root-temp-session (body params)
+  (ignore params)
   (unwind-protect
       (progn
 	(org-babel-root--start-session)
@@ -369,6 +365,7 @@ rcfiles."
     (org-babel-root--kill-session)))
 
 (defun org-babel-execute--root-session (session body params)
+  (ignore params)
   (let ((root-buffer-name (make-earmuff session)))
     (unless (get-buffer root-buffer-name)
       (remembering-position
@@ -378,6 +375,7 @@ rcfiles."
     (root--get-last-output)))
 
 (defun org-babel-execute--root-no-session (body params)
+  (ignore params)
   (let* ((file (org-babel-temp-file "root" ".C"))
 	 (func (string-replace ".C" "" (car (last (split-string file "/")))))
 	 (cmd  (format "%s -b -l -q %s" root-filepath file)))
@@ -444,14 +442,14 @@ rcfiles."
   (interactive)
   (condition-case err
       (root-eval-defun)
-    ('error (root-eval-line))))
+    ('error (progn (ignore err)
+		   (root-eval-line)))))
 
 (defun root-eval-buffer ()
   "Evaluate the buffer in ROOT"
   (interactive)
   (remembering-position
-   (mark-whole-buffer)
-   (root-eval-region (region-beginning) (region-end))))
+   (root-eval-region (point-min) (point-max))))
 
 (defun root-eval-file (filename)
   "Evaluate a file in ROOT"
