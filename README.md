@@ -73,6 +73,8 @@ ROOT-mode provides the functionality to execute C++ source code blocks
 using the ROOT REPL instead of the default C++ executable. This can
 make the process of writing C++ in org-mode more fluid.
 
+![Example demonstration of evaluating in org-mode](./docs/images/org-mode-example.gif)
+
 To write C++ code blocks that then are executed using ROOT, specify
 `root` as the language in the `begin_src` header. For example:
 
