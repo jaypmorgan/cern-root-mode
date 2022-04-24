@@ -1,9 +1,12 @@
-;;; root.el --- Major-mode for running C++ code with ROOT  -*- lexical-binding: t; -*-
+;;; root-mode.el --- Major-mode for running C++ code with ROOT  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Jay Morgan
 
 ;; Author: Jay Morgan <jay@morganwastaken.com>
 ;; Keywords: languages, tools
+;; Version: 0.1.3
+;; Homepage: https://github.com/jaypmorgan/root-mode
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -29,7 +32,6 @@
 
 ;;; Code:
 
-(require 's)
 (require 'ob) ;; org-babel
 (require 'comint)
 (require 'cl-lib)
@@ -69,18 +71,18 @@
 
 ;;; end of user variables
 
-(defmacro remembering-position (&rest body)
+(defmacro root--remembering-position (&rest body)
   `(save-window-excursion (save-excursion ,@body)))
 
-(defun push-new (element lst)
+(defun root--push-new (element lst)
   (if (memq element lst)
       lst
     (push element lst)))
 
-(defun pluck-item (el lst)
+(defun root--pluck-item (el lst)
   (cdr (assoc el lst)))
 
-(defun make-earmuff (name)
+(defun root--make-earmuff (name)
   "Give a string earmuffs, i.e. some-name -> *some-name*"
   (if (or (not (stringp name))  ;; only defined for strings
 	  (= (length name) 0)   ;; but not empty strings
@@ -89,7 +91,7 @@
       name
     (format "*%s*" name)))
 
-(defun make-no-earmuff (name)
+(defun root--make-no-earmuff (name)
   "Remove earmuffs from a string if it has them, *some-name* -> some-name"
   (if (and (stringp name)
 	   (> (length name) 0)
@@ -98,7 +100,7 @@
       (substring name 1 (1- (length name)))
     name))
 
-(defun ->> (&rest body)
+(defun root-->> (&rest body)
   (cl-reduce (lambda (prev next) (funcall (eval next) prev))
 	     (cdr body)
 	     :initial-value (eval (car body))))
@@ -115,10 +117,10 @@
   "Mapping from terminal type to various specific functions")
 
 (defun root--get-functions-for-terminal (terminal)
-  (pluck-item terminal root--backend-functions))
+  (root--pluck-item terminal root--backend-functions))
 
 (defun root--get-function-for-terminal (terminal function-type)
-  (pluck-item function-type (root--get-functions-for-terminal terminal)))
+  (root--pluck-item function-type (root--get-functions-for-terminal terminal)))
 
 (defun root--get-function-for-current-terminal (function-type)
   (root--get-function-for-terminal root-terminal-backend function-type))
@@ -128,7 +130,7 @@
 
 (defun root--send-vterm (proc input)
   "Send a string to the vterm REPL."
-  (remembering-position
+  (root--remembering-position
    (root-switch-to-repl)
    (when (fboundp 'vterm-send-string)
      (vterm-send-string input)
@@ -154,7 +156,7 @@
 (defun root--start-inferior ()
   "Run an inferior instance of ROOT"
   (let ((root-exe root-filepath)
-	(buffer (comint-check-proc (make-no-earmuff root-buffer-name)))
+	(buffer (comint-check-proc (root--make-no-earmuff root-buffer-name)))
 	(created-vars (root--set-env-vars)))
     (pop-to-buffer-same-window
      (if (or buffer (not (derived-mode-p 'root-mode))
@@ -162,7 +164,7 @@
 	 (get-buffer-create (or buffer root-buffer-name))
        (current-buffer)))
     (unless buffer
-      (make-comint-in-buffer (make-no-earmuff root-buffer-name) buffer root-exe nil root-command-options)
+      (make-comint-in-buffer (root--make-no-earmuff root-buffer-name) buffer root-exe nil root-command-options)
       (root-mode))
     (when created-vars
       (sleep-for 0.1)  ;; give enough time for ROOT to start before removing vars
@@ -182,7 +184,7 @@
   (get-text-property 0 'buffer-state text))
 
 (defun root--make-temporary-buffer (text)
-  (remembering-position
+  (root--remembering-position
    (let* ((temp-file (format "%s.C" (make-temp-file "root")))
 	  (buf       (find-file temp-file)))
      (switch-to-buffer buf) 
@@ -194,7 +196,7 @@
 (defun root--send-input-buffer (input)
   (let* ((text (root--make-text-property input))
 	 (file (root--make-temporary-buffer text)))
-    (remembering-position
+    (root--remembering-position
      (root-switch-to-repl)
      (let ((pos (point)))
        (print pos)
@@ -252,7 +254,7 @@ rcfiles."
 
 (define-derived-mode root-mode comint-mode
   "ROOT"
-  "Major for `run-root'.
+  "Major for `root-run'.
 
 \\<root-mode-map>"
   nil "ROOT"
@@ -278,7 +280,7 @@ rcfiles."
 
 (defun root--get-last-output ()
   ;; TODO: needs improvement to better capture the last output
-  (remembering-position
+  (root--remembering-position
    (root-switch-to-repl)
    (goto-char (point-max))
    (let* ((regex (format "%s.*" (substring root-prompt-regex 1)))
@@ -301,7 +303,7 @@ rcfiles."
 
 (defun root--remove-ansi-escape-codes (string)
   (let ((regex "\\[[0-9;^kD]+m?"))
-    (s-replace-regexp regex "" string)))
+    (replace-regexp-in-string regex "" string)))
 
 (defun root--get-completions-from-buffer ()
   (with-current-buffer root--completion-buffer-name
@@ -327,80 +329,79 @@ rcfiles."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
-(with-eval-after-load 'org
-  (add-to-list 'org-src-lang-modes '("root" . c++)))
+(add-to-list 'org-src-lang-modes '("root" . c++))
 
 ;;;###autoload
 (defun org-babel-execute:root (body params)
   "Execute a C++ org-mode source code block with ROOT."
   (message "Executing C++ source code block with ROOT")
   (print params)
-  (let ((session (pluck-item :session params)))
+  (let ((session (root--pluck-item :session params)))
     (if (not (string= session "none"))  ;; handle the user set session parameter
-	(org-babel-execute--root-session session body params)
-      (org-babel-execute--root-temp-session body params))))
+	(root--org-babel-execute-session session body params)
+      (root--org-babel-execute-temp-session body params))))
 
-(defun org-babel-root--cmdline-clean-result (string filename)
+(defun root--org-babel-cmdline-clean-result (string filename)
   (replace-regexp-in-string (format "\nProcessing %s...\n" filename) "" string))
 
-(defun org-babel-root--cmdline-simple-wrapper (body func)
+(defun root--org-babel-cmdline-simple-wrapper (body func)
   (format "void %s() {\n%s\n}" func body))
 
-(defun org-babel-root--kill-session ()
+(defun root--org-babel-kill-session ()
   (root--send-string root-buffer-name ".q"))
 
-(defun org-babel-root--start-session ()
-  (remembering-position (run-root)))
+(defun root--org-babel-start-session ()
+  (root--remembering-position (root-run)))
 
-(defun org-babel-execute--root-temp-session (body params)
+(defun root--org-babel-execute-temp-session (body params)
   (ignore params)
   (unwind-protect
       (progn
-	(org-babel-root--start-session)
+	(root--org-babel-start-session)
 	(root--send-string root-buffer-name body)
 	(sleep-for 0.5)  ;; wait for the output to be printed in the REPL
 	(let ((output (root--get-last-output)))
-	  (org-babel-root--kill-session)
+	  (root--org-babel-kill-session)
 	  output))
-    (org-babel-root--kill-session)))
+    (root--org-babel-kill-session)))
 
-(defun org-babel-execute--root-session (session body params)
+(defun root--org-babel-execute-session (session body params)
   (ignore params)
-  (let ((root-buffer-name (make-earmuff session)))
+  (let ((root-buffer-name (root--make-earmuff session)))
     (unless (get-buffer root-buffer-name)
-      (remembering-position
-       (run-root)))
+      (root--remembering-position
+       (root-run)))
     (root--send-string root-buffer-name body)
     (sleep-for 0.5)
     (root--get-last-output)))
 
-(defun org-babel-execute--root-no-session (body params)
+(defun root--org-babel-execute-no-session (body params)
   (ignore params)
   (let* ((file (org-babel-temp-file "root" ".C"))
-	 (func (string-replace ".C" "" (car (last (split-string file "/")))))
+	 (func (replace-regexp-in-string ".C" "" (car (last (split-string file "/")))))
 	 (cmd  (format "%s -b -l -q %s" root-filepath file)))
     (org-babel-with-temp-filebuffer file
-      (insert (org-babel-root--cmdline-simple-wrapper body func))
+      (insert (root--org-babel-cmdline-simple-wrapper body func))
       (save-buffer))
-    (org-babel-root--cmdline-clean-result (org-babel-eval cmd "") file)))
+    (root--org-babel-cmdline-clean-result (org-babel-eval cmd "") file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; User functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
-(defun run-root ()
+(defun root-run ()
   "Run an inferior instance of ROOT"
   (interactive)
   (funcall (root--ctfun 'start-terminal)))
 
 ;;;###autoload
-(defun run-root-other-window ()
+(defun root-run-other-window ()
   "Run an inferior instance of ROOT in an different window"
   (interactive)
   (split-window-sensibly)
   (other-window 1)
-  (run-root))
+  (root-run))
 
 (defun root-switch-to-repl ()
   "Switch to the ROOT REPL"
@@ -425,7 +426,7 @@ rcfiles."
 (defun root-eval-line ()
   "Evaluate this line in ROOT"
   (interactive)
-  (remembering-position
+  (root--remembering-position
    (let ((beg (progn (beginning-of-line) (point)))
 	 (end (progn (end-of-line) (point))))
      (root-eval-region beg end))))
@@ -433,7 +434,7 @@ rcfiles."
 (defun root-eval-defun ()
   "Evaluate a function in ROOT"
   (interactive)
-  (remembering-position
+  (root--remembering-position
    (c-mark-function)
    (root-eval-region (region-beginning) (region-end))))
 
@@ -448,7 +449,7 @@ rcfiles."
 (defun root-eval-buffer ()
   "Evaluate the buffer in ROOT"
   (interactive)
-  (remembering-position
+  (root--remembering-position
    (root-eval-region (point-min) (point-max))))
 
 (defun root-eval-file (filename)
@@ -468,4 +469,4 @@ rcfiles."
   (comint-dynamic-list-input-ring))
 
 (provide 'root-mode)
-;;; root.el ends here
+;;; root-mode.el ends here

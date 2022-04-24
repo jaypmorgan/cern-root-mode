@@ -193,10 +193,10 @@ There are only a few variables provided by the package:
 
 #+begin_src emacs-lisp :exports results :results output html
 ;; with instruction from: https://kitchingroup.cheme.cmu.edu/blog/2014/10/17/Generate-emacs-lisp-documentation/
-(let ((syms '(run-root run-root-other-window root-switch-to-repl root-eval-region
+(let ((syms '(root-run root-run-other-window root-switch-to-repl root-eval-region
 		       root-eval-line root-eval-string root-eval-defun root-eval-buffer
 		       root-eval-file root-change-working-directory root-list-input-history
-		       remembering-position pluck-item make-earmuff make-no-earmuff
+		       root--remembering-position root--pluck-item root--make-earmuff root--make-no-earmuff
 		       root--set-env-vars)))
   (cl-loop for s in syms
 	   do (princ (fun2org s))))
@@ -204,9 +204,9 @@ There are only a few variables provided by the package:
 
 #+RESULTS:
 #+begin_export html
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">run-root</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-run</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">run-root-other-window</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-run-other-window</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT in an different window</span></p>
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-switch-to-repl</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Switch to the ROOT REPL</span></p>
@@ -226,13 +226,13 @@ There are only a few variables provided by the package:
 <span class="fundoc_doc">Change the working directory of ROOT</span></p>
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-list-input-history</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">List the history of previously entered statements</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">remembering-position</span> <span class="fundoc_arglist">(&rest body)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--remembering-position</span> <span class="fundoc_arglist">(&rest body)</span></span> 
 <span class="fundoc_doc">No documentation.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">pluck-item</span> <span class="fundoc_arglist">(el lst)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--pluck-item</span> <span class="fundoc_arglist">(el lst)</span></span> 
 <span class="fundoc_doc">No documentation.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">make-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--make-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
 <span class="fundoc_doc">Give a string earmuffs, i.e. some-name -> *some-name*</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">make-no-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--make-no-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
 <span class="fundoc_doc">Remove earmuffs from a string if it has them, *some-name* -> some-name</span></p>
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--set-env-vars</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Setup the environment variables so that no colours or bold
@@ -260,7 +260,7 @@ using:
 #+begin_src bash
 emacs -batch \
 	-l ert \
-	-l root.el \
+	-l root-mode.el \
 	-l tests/test-root.el \
 	-f ert-run-tests-batch-and-exit
 #+END_SRC

@@ -54,8 +54,8 @@ Below is listed the various commands provided by the package.
 
 | Command                         | Description                                                                                                        |
 |:--------------------------------|:-------------------------------------------------------------------------------------------------------------------|
-| `run-root`                      | Start the ROOT REPL in the same window.                                                                            |
-| `run-root-other-window`         | Start the ROOT REPL in a different window.                                                                         |
+| `root-run`                      | Start the ROOT REPL in the same window.                                                                            |
+| `root-run-other-window`         | Start the ROOT REPL in a different window.                                                                         |
 | `root-switch-to-repl`           | Move the cursor to the ROOT REPL.                                                                                  |
 | `root-eval-region`              | Evaluate a marked region in ROOT.                                                                                  |
 | `root-eval-line`                | Evaluate this line in the REPL.                                                                                    |
@@ -127,7 +127,7 @@ using:
 ```bash
 emacs -batch \
 	-l ert \
-	-l root.el \
+	-l root-mode.el \
 	-l tests/test-root.el \
 	-f ert-run-tests-batch-and-exit
 ```

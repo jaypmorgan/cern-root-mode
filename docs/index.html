@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-22 ven. 22:14 -->
+<!-- 2022-04-24 dim. 16:03 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ROOT-mode User Manual</title>
@@ -202,34 +202,34 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2ce302a">1. Introduction</a>
+<li><a href="#org4847fb4">1. Introduction</a>
 <ul>
-<li><a href="#org2ad8ebc">1.1. What is ROOT?</a></li>
-<li><a href="#org9bccca2">1.2. What is ROOT-mode?</a></li>
+<li><a href="#org37f6fef">1.1. What is ROOT?</a></li>
+<li><a href="#org223a92b">1.2. What is ROOT-mode?</a></li>
 </ul>
 </li>
-<li><a href="#orgf60803b">2. Installation</a>
+<li><a href="#org9e85049">2. Installation</a>
 <ul>
-<li><a href="#org1b95377">2.1. Manual installation</a></li>
-<li><a href="#org6aff98f">2.2. Using <code>use-package</code> and <code>straight.el</code></a></li>
+<li><a href="#org8d2f721">2.1. Manual installation</a></li>
+<li><a href="#org6c1849c">2.2. Using <code>use-package</code> and <code>straight.el</code></a></li>
 </ul>
 </li>
-<li><a href="#org72a58f2">3. Using root-mode</a></li>
-<li><a href="#org2abde77">4. Customisation</a></li>
-<li><a href="#org3635086">5. Developing ROOT-mode</a>
+<li><a href="#org69a317a">3. Using root-mode</a></li>
+<li><a href="#org6f712be">4. Customisation</a></li>
+<li><a href="#org5b478a4">5. Developing ROOT-mode</a>
 <ul>
-<li><a href="#org802a07c">5.1. Variable index</a></li>
-<li><a href="#orgdcda424">5.2. Function index</a></li>
-<li><a href="#org9ff2b7b">5.3. Testing</a></li>
-<li><a href="#org703109d">5.4. Contributions</a></li>
+<li><a href="#org3fe98b0">5.1. Variable index</a></li>
+<li><a href="#org4892295">5.2. Function index</a></li>
+<li><a href="#orgd782585">5.3. Testing</a></li>
+<li><a href="#org3b171c3">5.4. Contributions</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2ce302a" class="outline-2">
-<h2 id="org2ce302a"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-org4847fb4" class="outline-2">
+<h2 id="org4847fb4"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This is the user-manual for the ROOT-mode package, the source code of which can be
@@ -244,8 +244,8 @@ ROOT command line interface/REPL.
 </p>
 </div>
 
-<div id="outline-container-org2ad8ebc" class="outline-3">
-<h3 id="org2ad8ebc"><span class="section-number-3">1.1.</span> What is ROOT?</h3>
+<div id="outline-container-org37f6fef" class="outline-3">
+<h3 id="org37f6fef"><span class="section-number-3">1.1.</span> What is ROOT?</h3>
 <div class="outline-text-3" id="text-1-1">
 <blockquote>
 <p>
@@ -257,8 +257,8 @@ ROOT files. The Higgs was found with ROOT!
 </div>
 </div>
 
-<div id="outline-container-org9bccca2" class="outline-3">
-<h3 id="org9bccca2"><span class="section-number-3">1.2.</span> What is ROOT-mode?</h3>
+<div id="outline-container-org223a92b" class="outline-3">
+<h3 id="org223a92b"><span class="section-number-3">1.2.</span> What is ROOT-mode?</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
@@ -270,7 +270,7 @@ again, using the ROOT REPL.
 </p>
 
 
-<div id="orgf0d212a" class="figure">
+<div id="orge22e9db" class="figure">
 <p><img src="./images/brief-example.gif" alt="brief-example.gif" />
 </p>
 <p><span class="figure-number">Figure 1: </span>A brief example of what we want ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.</p>
@@ -279,8 +279,8 @@ again, using the ROOT REPL.
 </div>
 </div>
 
-<div id="outline-container-orgf60803b" class="outline-2">
-<h2 id="orgf60803b"><span class="section-number-2">2.</span> Installation</h2>
+<div id="outline-container-org9e85049" class="outline-2">
+<h2 id="org9e85049"><span class="section-number-2">2.</span> Installation</h2>
 <div class="outline-text-2" id="text-2">
 <p class="verse">
 I am in the process of submitting the package to MELPA, but in the meantime, we will have to rely on the manual installation or specify the github repository via straight.<br />
@@ -296,8 +296,8 @@ frequently customise your Emacs environment, will be to use <code>use-package</c
 </p>
 </div>
 
-<div id="outline-container-org1b95377" class="outline-3">
-<h3 id="org1b95377"><span class="section-number-3">2.1.</span> Manual installation</h3>
+<div id="outline-container-org8d2f721" class="outline-3">
+<h3 id="org8d2f721"><span class="section-number-3">2.1.</span> Manual installation</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 First you will need to clone the repository from Github:
@@ -316,7 +316,7 @@ begin using the package straight away.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgd23d316">(add-to-list 'load-path <span style="color: #008000;">"~/.emacs.d/root-mode/"</span>)
+<pre class="src src-emacs-lisp" id="org7969845">(add-to-list 'load-path <span style="color: #008000;">"~/.emacs.d/root-mode/"</span>)
 (load <span style="color: #008000;">"root"</span>)
 (<span style="color: #0000FF;">require</span> '<span style="color: #D0372D;">root-mode</span>)
 </pre>
@@ -329,7 +329,7 @@ path (absolute or relative) to the ROOT REPL executable.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgbb400b5">(<span style="color: #0000FF;">setq</span> root-filepath <span style="color: #008000;">"/path/to/root"</span>
+<pre class="src src-emacs-lisp" id="orga6c5ec1">(<span style="color: #0000FF;">setq</span> root-filepath <span style="color: #008000;">"/path/to/root"</span>
       root-terminal-backend 'vterm)
 </pre>
 </div>
@@ -340,7 +340,7 @@ would suggest that these key-bindings are only created within the C++ keymap.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org6c647b1">(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-c"</span>) 'root-eval-defun-maybe)
+<pre class="src src-emacs-lisp" id="orgadcf5ca">(define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-c"</span>) 'root-eval-defun-maybe)
 (define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-b"</span>) 'root-eval-buffer)
 (define-key 'c++-mode-map (kbd <span style="color: #008000;">"C-c C-l"</span>) 'root-eval-file)
 </pre>
@@ -364,8 +364,8 @@ In summary we would have the following configuration:
 </div>
 </div>
 
-<div id="outline-container-org6aff98f" class="outline-3">
-<h3 id="org6aff98f"><span class="section-number-3">2.2.</span> Using <code>use-package</code> and <code>straight.el</code></h3>
+<div id="outline-container-org6c1849c" class="outline-3">
+<h3 id="org6c1849c"><span class="section-number-3">2.2.</span> Using <code>use-package</code> and <code>straight.el</code></h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 The package is not on MELPA, so you can either clone the repository
@@ -391,8 +391,8 @@ the package with straight.el:
 </div>
 
 
-<div id="outline-container-org72a58f2" class="outline-2">
-<h2 id="org72a58f2"><span class="section-number-2">3.</span> Using root-mode</h2>
+<div id="outline-container-org69a317a" class="outline-2">
+<h2 id="org69a317a"><span class="section-number-2">3.</span> Using root-mode</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 When in a C++ major-mode buffer, enter the command (using <code>M-x</code>): <code>run-root</code>. This will
@@ -407,8 +407,8 @@ then create a new ROOT REPL in the other window.
 </div>
 </div>
 
-<div id="outline-container-org2abde77" class="outline-2">
-<h2 id="org2abde77"><span class="section-number-2">4.</span> Customisation</h2>
+<div id="outline-container-org6f712be" class="outline-2">
+<h2 id="org6f712be"><span class="section-number-2">4.</span> Customisation</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 There are only a few variables provided by the package:
@@ -440,12 +440,12 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 </div>
 
 
-<div id="outline-container-org3635086" class="outline-2">
-<h2 id="org3635086"><span class="section-number-2">5.</span> Developing ROOT-mode</h2>
+<div id="outline-container-org5b478a4" class="outline-2">
+<h2 id="org5b478a4"><span class="section-number-2">5.</span> Developing ROOT-mode</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org802a07c" class="outline-3">
-<h3 id="org802a07c"><span class="section-number-3">5.1.</span> Variable index</h3>
+<div id="outline-container-org3fe98b0" class="outline-3">
+<h3 id="org3fe98b0"><span class="section-number-3">5.1.</span> Variable index</h3>
 <div class="outline-text-3" id="text-5-1">
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">root-filepath</span></span> (Default: )
 <span class="fundoc_doc">Path to the ROOT executable</span></p>
@@ -460,12 +460,12 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 </div>
 </div>
 
-<div id="outline-container-orgdcda424" class="outline-3">
-<h3 id="orgdcda424"><span class="section-number-3">5.2.</span> Function index</h3>
+<div id="outline-container-org4892295" class="outline-3">
+<h3 id="org4892295"><span class="section-number-3">5.2.</span> Function index</h3>
 <div class="outline-text-3" id="text-5-2">
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">run-root</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-run</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">run-root-other-window</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-run-other-window</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT in an different window</span></p>
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-switch-to-repl</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Switch to the ROOT REPL</span></p>
@@ -485,13 +485,13 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 <span class="fundoc_doc">Change the working directory of ROOT</span></p>
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-list-input-history</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">List the history of previously entered statements</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">remembering-position</span> <span class="fundoc_arglist">(&rest body)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--remembering-position</span> <span class="fundoc_arglist">(&rest body)</span></span> 
 <span class="fundoc_doc">No documentation.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">pluck-item</span> <span class="fundoc_arglist">(el lst)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--pluck-item</span> <span class="fundoc_arglist">(el lst)</span></span> 
 <span class="fundoc_doc">No documentation.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">make-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--make-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
 <span class="fundoc_doc">Give a string earmuffs, i.e. some-name -> *some-name*</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">make-no-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--make-no-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
 <span class="fundoc_doc">Remove earmuffs from a string if it has them, *some-name* -> some-name</span></p>
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--set-env-vars</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Setup the environment variables so that no colours or bold
@@ -507,8 +507,8 @@ rcfiles.</span></p>
 </div>
 
 
-<div id="outline-container-org9ff2b7b" class="outline-3">
-<h3 id="org9ff2b7b"><span class="section-number-3">5.3.</span> Testing</h3>
+<div id="outline-container-orgd782585" class="outline-3">
+<h3 id="orgd782585"><span class="section-number-3">5.3.</span> Testing</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 To test the functionality of the package, some unit tests have been
@@ -531,8 +531,8 @@ using:
 </div>
 
 
-<div id="outline-container-org703109d" class="outline-3">
-<h3 id="org703109d"><span class="section-number-3">5.4.</span> Contributions</h3>
+<div id="outline-container-org3b171c3" class="outline-3">
+<h3 id="org3b171c3"><span class="section-number-3">5.4.</span> Contributions</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 All contributions should be directed to <a href="https://github.com/jaypmorgan/root-mode">https://github.com/jaypmorgan/root-mode</a> where
@@ -545,7 +545,7 @@ you can submit issues and pull-requests.
 <div id="postamble" class="status">
 <p class="date">Date: 2022-04-20 mer. 00:00</p>
 <p class="author">Author: Jay Morgan</p>
-<p class="date">Created: 2022-04-22 ven. 22:14</p>
+<p class="date">Created: 2022-04-24 dim. 16:03</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
