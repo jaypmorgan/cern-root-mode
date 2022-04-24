@@ -48,7 +48,7 @@
   :type 'string
   :group 'root)
 
-(defcustom root-prompt-regex "^\\(?:root \\[[0-9]+\\] \\)"
+(defcustom root-prompt-regex "^\\(?:root \\(?:(cont'ed, cancel with .@) \\)?\\[[0-9]+\\]\s?\\)"
   "Regular expression to find prompt location in ROOT-repl."
   :type 'string
   :group 'root)
@@ -286,7 +286,7 @@ rcfiles."
   (remembering-position
    (root-switch-to-repl)
    (end-of-buffer)
-   (let* ((regex (format "%s.*"(substring root-prompt-regex 1)))
+   (let* ((regex (format "%s.*" (substring root-prompt-regex 1)))
 	  (np (re-search-backward regex))
 	  (pp (progn (re-search-backward regex)
 		    (next-line)
