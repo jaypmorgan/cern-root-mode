@@ -36,7 +36,12 @@
 (require 'comint)
 (require 'cl-lib)
 (require 'cc-cmds)
-(require 'vterm nil 'noerror)
+(unless (require 'vterm nil 'noerror)
+  ;; if vterm isn't available then we need these to prevent
+  ;; byte-compilation warnings
+  (defvar vterm-shell)
+  (declare-function vterm "vterm" (buffer-name))
+  (declare-function vterm-send-return "vterm" ()))
 
 (defcustom root-mode nil
   "Major-mode for running C++ code with ROOT."
@@ -132,11 +137,12 @@
   "Get function of FUNCTION-TYPE for currently defined terminal."
   (root--get-function-for-terminal root-terminal-backend function-type))
 
-(defalias 'root--ctfun 'root--get-function-for-current-terminal
+(defalias 'root--ctfun #'root--get-function-for-current-terminal
   "ctfun -- current terminal function")
 
 (defun root--send-vterm (proc input)
   "Send INPUT (a string) to the vterm REPL running as PROC."
+  (ignore proc)
   (root--remembering-position
    (root-switch-to-repl)
    (when (fboundp 'vterm-send-string)
@@ -247,7 +253,7 @@ rcfiles."
 	  (val  "default")
 	  (buf  (create-file-buffer root--rcfile)))
       (with-current-buffer buf
-	(insert (apply 'concat (mapcar (lambda (v) (format "Rint.%s\t\t%s\n" v val)) vars)))
+	(insert (apply #'concat (mapcar (lambda (v) (format "Rint.%s\t\t%s\n" v val)) vars)))
 	(write-file root--rcfile nil))
       (kill-buffer buf))
     nil))
@@ -279,7 +285,7 @@ rcfiles."
   (set (make-local-variable 'paragraph-separate) "\\'")
   (set (make-local-variable 'paragraph-start) root-prompt-regex)
   (set (make-local-variable 'comint-input-sender) 'root--send-string)
-  (add-hook 'root-mode-hook 'root--initialise))
+  (root--initialise))
 
 ;; (defun org-babel-execute:root (body params)
 ;;   "Execute a block of C++ code with ROOT in org-mode."
