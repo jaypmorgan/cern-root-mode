@@ -461,10 +461,9 @@ rcfiles."
 (defun cern-root-eval-line ()
   "Evaluate this line in ROOT."
   (interactive)
-  (cern-root--remembering-position
-   (let ((beg (progn (beginning-of-line) (point)))
-	 (end (progn (end-of-line) (point))))
-     (cern-root-eval-region beg end))))
+  (let ((beg (point-at-bol))
+	(end (point-at-eol)))
+    (cern-root-eval-region beg end)))
 
 (defun cern-root-eval-defun ()
   "Evaluate a function in ROOT."
