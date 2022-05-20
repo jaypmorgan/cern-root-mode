@@ -4,7 +4,7 @@
 
 ;; Author: Jay Morgan <jay@morganwastaken.com>
 ;; Keywords: languages, tools
-;; Version: 0.1.3
+;; Version: 0.1.4
 ;; Homepage: https://github.com/jaypmorgan/cern-root-mode
 ;; Package-Requires: ((emacs "26.1"))
 
