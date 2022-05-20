@@ -1,15 +1,15 @@
-#+title: ROOT-mode User Manual
+#+title: CERN-ROOT-mode User Manual
 #+author: Jay Morgan
 #+date: <2022-04-20 mer.>
 #+html_head: <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
 
 * Introduction
 
-This is the user-manual for the ROOT-mode package, the source code of which can be
-found at [[https://github.com/jaypmorgan/root-mode]]. In this manual, I detail how to
-install, use, customise, and help develop ROOT-mode.
+This is the user-manual for the CERN-ROOT-mode package, the source code of which can be
+found at [[https://github.com/jaypmorgan/cern-root-mode]]. In this manual, I detail how to
+install, use, customise, and help develop CERN-ROOT-mode.
 
-ROOT-mode is an Emacs major-mode for interacting with ROOT
+CERN-ROOT-mode is an Emacs major-mode for interacting with ROOT
 (https://root.cern/). Specifically, this package provides the facilities to run the
 ROOT command line interface/REPL.
 
@@ -21,16 +21,16 @@ amounts of data: today, more than 1 exabyte (1,000,000,000 gigabyte) are stored 
 ROOT files. The Higgs was found with ROOT!
 #+end_quote
 
-** What is ROOT-mode?
+** What is CERN-ROOT-mode?
 
-ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
+CERN-ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
 with the ROOT REPL. In this, we have provided various functions such as: creating a
 new REPL, sending lines/function definitions/evaluating files in this REPL. In
 addition to working with C++ files. This functionality is extended to org-mode. In
 this way, we may create C++ source code blocks and evaluate their contents, once
 again, using the ROOT REPL.
 
-#+CAPTION: A brief example of what we want ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.
+#+CAPTION: A brief example of what we want CERN-ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.
 [[./images/brief-example.gif]]
 
 * Installation
@@ -40,8 +40,8 @@ I am in the process of submitting the package to MELPA, but in the meantime, we 
 #+end_verse
 
 There are many competing ways to install packages with Emacs. Instead of enumerating
-all of them, I will demonstrate how to install ROOT-mode using to ends of the
-spectrum. The first will be installing ROOT-mode using a manual installation and will
+all of them, I will demonstrate how to install CERN-ROOT-mode using to ends of the
+spectrum. The first will be installing CERN-ROOT-mode using a manual installation and will
 not require any other 3rd-party tools. The second way, that may be more common if you
 frequently customise your Emacs environment, will be to use =use-package= and
 =straight.el= to create a very concise configuration.
@@ -51,29 +51,29 @@ frequently customise your Emacs environment, will be to use =use-package= and
 First you will need to clone the repository from Github:
 
 #+begin_src bash
-git clone https://github.com/jaypmorgan/root-mode ~/.emacs.d/root-mode
+git clone https://github.com/jaypmorgan/cern-root-mode ~/.emacs.d/cern-root-mode
 #+end_src
 
 After, in Emacs, you can load the package. First we're adding this cloned directory
 to the load-path. This will ensure that when we call =(load "root")=, Emacs will be
-able to find a =root.el=. After, we call =(require 'root-mode)= which will allow us to
+able to find a =root.el=. After, we call =(require 'cern-root-mode)= which will allow us to
 begin using the package straight away. 
 
 #+name: require-package
 #+begin_src emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/root-mode/")
+(add-to-list 'load-path "~/.emacs.d/cern-root-mode/")
 (load "root")
-(require 'root-mode)
+(require 'cern-root-mode)
 #+end_src
 
 If you want to configure some of the variables, these can be done using =setq=. One
-variable that you might want to customise is the =root-filepath=. This variable is the
+variable that you might want to customise is the =cern-root-filepath=. This variable is the
 path (absolute or relative) to the ROOT REPL executable.
 
 #+name: variables
 #+begin_src emacs-lisp
-(setq root-filepath "/path/to/root"
-      root-terminal-backend 'vterm)
+(setq cern-root-filepath "/path/to/root"
+      cern-root-terminal-backend 'vterm)
 #+end_src
 
 You may also want to configure some key-bindings to the commonly used functions. I
@@ -81,9 +81,9 @@ would suggest that these key-bindings are only created within the C++ keymap.
 
 #+name: keybind
 #+begin_src emacs-lisp
-(define-key 'c++-mode-map (kbd "C-c C-c") 'root-eval-defun-maybe)
-(define-key 'c++-mode-map (kbd "C-c C-b") 'root-eval-buffer)
-(define-key 'c++-mode-map (kbd "C-c C-l") 'root-eval-file)
+(define-key 'c++-mode-map (kbd "C-c C-c") 'cern-root-eval-defun-maybe)
+(define-key 'c++-mode-map (kbd "C-c C-b") 'cern-root-eval-buffer)
+(define-key 'c++-mode-map (kbd "C-c C-l") 'cern-root-eval-file)
 #+end_src
 
 In summary we would have the following configuration:
@@ -102,31 +102,31 @@ use-package/straight. Here is one example of installing/configuring
 the package with straight.el:
 
 #+begin_src emacs-lisp
-(use-package root-mode
+(use-package cern-root-mode
   :bind (:map c++-mode-map
-	     (("C-c C-c" . root-eval-defun)
-	      ("C-c C-b" . root-eval-buffer)
-	      ("C-c C-l" . root-eval-file)
-	      ("C-c C-r" . root-eval-region)))
-  :straight (root-mode :type git :host github :repo "jaypmorgan/root-mode")
+	     (("C-c C-c" . cern-root-eval-defun)
+	      ("C-c C-b" . cern-root-eval-buffer)
+	      ("C-c C-l" . cern-root-eval-file)
+	      ("C-c C-r" . cern-root-eval-region)))
+  :straight (cern-root-mode :type git :host github :repo "jaypmorgan/cern-root-mode")
   :config
-  (setq root-filepath "/path/to/root"))
+  (setq cern-root-filepath "/path/to/root"))
 #+end_src
 
 
-* Using root-mode
+* Using cern-root-mode
 
-When in a C++ major-mode buffer, enter the command (using =M-x=): =run-root=. This will
+When in a C++ major-mode buffer, enter the command (using =M-x=): =cern-root-run=. This will
 start a new instance of the ROOT REPL in the same window.
 
-If you want to create a new window for the ROOT REPL, instead of using =run-root=,
-enter the command: =run-root-other-window=. This will first split the window sensibly,
+If you want to create a new window for the ROOT REPL, instead of using =cern-root-run,
+enter the command: =cern-root-run-other-window=. This will first split the window sensibly,
 then create a new ROOT REPL in the other window.
 
 ** Using ROOT in Org-mode
 
 
-ROOT-mode provides the functionality to execute C++ source code blocks using the ROOT
+CERN-ROOT-mode provides the functionality to execute C++ source code blocks using the ROOT
 REPL instead of the default C++ executable. This can make the process of writing C++
 in org-mode more fluid (for an example, see ref:fig:org-mode-test).
 
@@ -153,7 +153,7 @@ the context of many source blocks. For example, let's create another
 code block with this session argument:
 
 #+begin_example
-#+begin_src root :session *my-root-session*
+#+begin_src cern-root :session *my-root-session*
 void test() {
 	// print something
 	printf("This is something");
@@ -161,14 +161,14 @@ void test() {
 #+end_src
 #+end_example
 
-When we first run this code block, ROOT-mode will create a new
+When we first run this code block, CERN-ROOT-mode will create a new
 instance of the ROOT REPL in the buffer named =*my-root-session*= (you
 can switch to this buffer if you want to interact directly outside of
 the code blocks!). This means that, by specifying the same argument to
 a different code block, we can call this =test= function.
 
 #+begin_example
-#+begin_src root :session *my-root-session*
+#+begin_src cern-root :session *my-root-session*
 test();  // call the test function
 #+end_src
 #+end_example
@@ -181,20 +181,20 @@ in Emacs.
 
 There are only a few variables provided by the package:
 
-- *root-filepath* -- (string, default ="root"=) this is the
+- *cern-root-filepath* -- (string, default ="root"=) this is the
   absolute/relative path to the root executable. This could be left as
   the default "root" value if ROOT is available on your $PATH.
-- *root-command-option* -- (string, default =""=) these are the
+- *cern-root-command-option* -- (string, default =""=) these are the
   command line options used when starting ROOT. By default there are
   no options.
-- *root-prompt-regex* -- (string, default ="^\\[[0-9;^k]+m?"=) this
+- *cern-root-prompt-regex* -- (string, default ="^\\[[0-9;^k]+m?"=) this
   is the regular expression used to find the input prompt of the ROOT
   REPL. If there is a customised prompt, this will need to be updated
   to suit the customisation.
-- *root-buffer-name* -- (string, default ="*ROOT*"=) what to call
+- *cern-root-buffer-name* -- (string, default ="*ROOT*"=) what to call
   the ROOT repl buffer when it starts. This could be left as the
   default =*ROOT*=, but its there for you to modify as you please.
-- *root-terminal-backend* -- (symbol, default ='terminal=) the
+- *cern-root-terminal-backend* -- (symbol, default ='terminal=) the
   terminal emulator to run the ROOT instance in. There are only two
   current defined [=vterm=, =inferior=]. By default, the terminal
   backend is set to =inferior=. Though, there is still some issues in
@@ -203,7 +203,7 @@ There are only a few variables provided by the package:
   (requires you've already installed vterm).
 
 
-* Developing ROOT-mode
+* Developing CERN-ROOT-mode
 
 #+begin_src emacs-lisp :exports none :results none
 (defun fun2org (fs)
@@ -224,22 +224,22 @@ There are only a few variables provided by the package:
 
 #+begin_src emacs-lisp :exports results :results output html
 ;; with instruction from: https://kitchingroup.cheme.cmu.edu/blog/2014/10/17/Generate-emacs-lisp-documentation/
-(let ((syms '(root-filepath root-command-options root-prompt-regex root-terminal-backend root-buffer-name)))
+(let ((syms '(cern-root-filepath cern-root-command-options cern-root-prompt-regex cern-root-terminal-backend cern-root-buffer-name)))
   (cl-loop for s in syms
 	   do (princ (fun2org s))))
 #+end_src
 
 #+RESULTS:
 #+begin_export html
-<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">root-filepath</span></span> (Default: )
+<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-filepath</span></span> (Default: )
 <span class="fundoc_doc">Path to the ROOT executable</span></p>
-<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">root-command-options</span></span> (Default: )
+<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-command-options</span></span> (Default: )
 <span class="fundoc_doc">Command line options for running ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">root-prompt-regex</span></span> (Default: )
-<span class="fundoc_doc">Regular expression to find prompt location in ROOT-repl.</span></p>
-<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">root-terminal-backend</span></span> (Default: )
+<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-prompt-regex</span></span> (Default: )
+<span class="fundoc_doc">Regular expression to find prompt location in CERN-ROOT-repl.</span></p>
+<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-terminal-backend</span></span> (Default: )
 <span class="fundoc_doc">Type of terminal to use when running ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">root-buffer-name</span></span> (Default: )
+<p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-buffer-name</span></span> (Default: )
 <span class="fundoc_doc">Name of the newly create buffer for ROOT</span></p>
 #+end_export
 
@@ -247,48 +247,48 @@ There are only a few variables provided by the package:
 
 #+begin_src emacs-lisp :exports results :results output html
 ;; with instruction from: https://kitchingroup.cheme.cmu.edu/blog/2014/10/17/Generate-emacs-lisp-documentation/
-(let ((syms '(root-run root-run-other-window root-switch-to-repl root-eval-region
-		       root-eval-line root-eval-string root-eval-defun root-eval-buffer
-		       root-eval-file root-change-working-directory root-list-input-history
-		       root--remembering-position root--pluck-item root--make-earmuff root--make-no-earmuff
-		       root--set-env-vars)))
+(let ((syms '(cern-root-run cern-root-run-other-window cern-root-switch-to-repl cern-root-eval-region
+		       cern-root-eval-line cern-root-eval-string cern-root-eval-defun cern-root-eval-buffer
+		       cern-root-eval-file cern-root-change-working-directory cern-root-list-input-history
+		       cern-root--remembering-position cern-root--pluck-item cern-root--make-earmuff cern-root--make-no-earmuff
+		       cern-root--set-env-vars)))
   (cl-loop for s in syms
 	   do (princ (fun2org s))))
 #+end_src
 
 #+RESULTS:
 #+begin_export html
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-run</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-run</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-run-other-window</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-run-other-window</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT in an different window</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-switch-to-repl</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-switch-to-repl</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Switch to the ROOT REPL</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-eval-region</span> <span class="fundoc_arglist">(beg end)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-eval-region</span> <span class="fundoc_arglist">(beg end)</span></span> 
 <span class="fundoc_doc">Evaluate a region in ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-eval-line</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-eval-line</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Evaluate this line in ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-eval-string</span> <span class="fundoc_arglist">(string)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-eval-string</span> <span class="fundoc_arglist">(string)</span></span> 
 <span class="fundoc_doc">Send and evaluate a string in the ROOT REPL.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-eval-defun</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-eval-defun</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Evaluate a function in ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-eval-buffer</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-eval-buffer</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Evaluate the buffer in ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-eval-file</span> <span class="fundoc_arglist">(filename)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-eval-file</span> <span class="fundoc_arglist">(filename)</span></span> 
 <span class="fundoc_doc">Evaluate a file in ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-change-working-directory</span> <span class="fundoc_arglist">(dir)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-change-working-directory</span> <span class="fundoc_arglist">(dir)</span></span> 
 <span class="fundoc_doc">Change the working directory of ROOT</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root-list-input-history</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-list-input-history</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">List the history of previously entered statements</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--remembering-position</span> <span class="fundoc_arglist">(&rest body)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root--remembering-position</span> <span class="fundoc_arglist">(&rest body)</span></span> 
 <span class="fundoc_doc">No documentation.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--pluck-item</span> <span class="fundoc_arglist">(el lst)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root--pluck-item</span> <span class="fundoc_arglist">(el lst)</span></span> 
 <span class="fundoc_doc">No documentation.</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--make-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root--make-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
 <span class="fundoc_doc">Give a string earmuffs, i.e. some-name -> *some-name*</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--make-no-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root--make-no-earmuff</span> <span class="fundoc_arglist">(name)</span></span> 
 <span class="fundoc_doc">Remove earmuffs from a string if it has them, *some-name* -> some-name</span></p>
-<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">root--set-env-vars</span> <span class="fundoc_arglist">nil</span></span> 
+<p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root--set-env-vars</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Setup the environment variables so that no colours or bold
 fonts will be used in the REPL. This prevents comint from
 creating duplicated input in trying to render the ascii colour
@@ -314,13 +314,13 @@ using:
 #+begin_src bash
 emacs -batch \
 	-l ert \
-	-l root-mode.el \
-	-l tests/test-root.el \
+	-l cern-root-mode.el \
+	-l tests/test-cern-root-mode.el \
 	-f ert-run-tests-batch-and-exit
 #+END_SRC
 
 
 ** Contributions
 
-All contributions should be directed to [[https://github.com/jaypmorgan/root-mode]] where
+All contributions should be directed to [[https://github.com/jaypmorgan/cern-root-mode]] where
 you can submit issues and pull-requests.
