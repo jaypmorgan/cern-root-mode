@@ -1,5 +1,7 @@
 # CERN-ROOT-mode
 
+[![MELPA](https://melpa.org/packages/cern-root-mode-badge.svg)](https://melpa.org/#/cern-root-mode)
+
 CERN-ROOT-mode is an Emacs major-mode for interacting with ROOT
 (https://root.cern/). Specifically, this package provides the
 facilities to run the ROOT command line interface/REPL.
@@ -8,10 +10,10 @@ facilities to run the ROOT command line interface/REPL.
 
 ## Installation & Configuration
 
-The package is not on MELPA, so you can either clone the repository
-and manually load the file in Emacs, or use something like
-use-package/straight. Here is one example of installing/configuring
-the package with straight.el:
+You can install the package from
+[melpa](https://melpa.org/#/cern-root-mode), or use straight.el and
+download the package directly from this github repository. Here is one
+example of installing/configuring the package with straight.el:
 
 ```lisp
 (use-package cern-root-mode
