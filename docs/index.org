@@ -35,16 +35,24 @@ again, using the ROOT REPL.
 
 * Installation
 
-#+begin_verse
-I am in the process of submitting the package to MELPA, but in the meantime, we will have to rely on the manual installation or specify the github repository via straight.
-#+end_verse
+** Installing with =package.el=
 
-There are many competing ways to install packages with Emacs. Instead of enumerating
-all of them, I will demonstrate how to install CERN-ROOT-mode using to ends of the
-spectrum. The first will be installing CERN-ROOT-mode using a manual installation and will
-not require any other 3rd-party tools. The second way, that may be more common if you
-frequently customise your Emacs environment, will be to use =use-package= and
-=straight.el= to create a very concise configuration.
+CERN-ROOT-mode is available on [[https://melpa.org/#/cern-root-mode][Melpa]], so if you use =package.el=, and assuming that
+you've added Melpa to the list of package archives (as shown below), then you can
+run =(package-install 'cern-root-mode)=.
+
+#+begin_src emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+;; and `package-pinned-packages`. Most users will not need or want to do this.
+;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(package-initialize)
+#+end_src
+
+#+begin_src emacs-lisp
+(package-install 'cern-root-mode)
+#+end_src
 
 ** Manual installation
 
@@ -96,10 +104,7 @@ In summary we would have the following configuration:
 
 ** Using =use-package= and =straight.el=
 
-The package is not on MELPA, so you can either clone the repository
-and manually load the file in Emacs, or use something like
-use-package/straight. Here is one example of installing/configuring
-the package with straight.el:
+Here is one example of installing/configuring the package with =straight.el=:
 
 #+begin_src emacs-lisp
 (use-package cern-root-mode
@@ -184,7 +189,7 @@ There are only a few variables provided by the package:
 - *cern-root-filepath* -- (string, default ="root"=) this is the
   absolute/relative path to the root executable. This could be left as
   the default "root" value if ROOT is available on your $PATH.
-- *cern-root-command-option* -- (string, default =""=) these are the
+- *cern-root-command-options* -- (string, default =""=) these are the
   command line options used when starting ROOT. By default there are
   no options.
 - *cern-root-prompt-regex* -- (string, default ="^\\[[0-9;^k]+m?"=) this
@@ -223,6 +228,7 @@ There are only a few variables provided by the package:
 ** Variable index
 
 #+begin_src emacs-lisp :exports results :results output html
+(require 'cern-root-mode)
 ;; with instruction from: https://kitchingroup.cheme.cmu.edu/blog/2014/10/17/Generate-emacs-lisp-documentation/
 (let ((syms '(cern-root-filepath cern-root-command-options cern-root-prompt-regex cern-root-terminal-backend cern-root-buffer-name)))
   (cl-loop for s in syms
@@ -232,15 +238,15 @@ There are only a few variables provided by the package:
 #+RESULTS:
 #+begin_export html
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-filepath</span></span> (Default: )
-<span class="fundoc_doc">Path to the ROOT executable</span></p>
+<span class="fundoc_doc">Path to the ROOT executable.</span></p>
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-command-options</span></span> (Default: )
-<span class="fundoc_doc">Command line options for running ROOT</span></p>
+<span class="fundoc_doc">Command line options for running ROOT.</span></p>
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-prompt-regex</span></span> (Default: )
-<span class="fundoc_doc">Regular expression to find prompt location in CERN-ROOT-repl.</span></p>
+<span class="fundoc_doc">Regular expression to find prompt location in ROOT-repl.</span></p>
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-terminal-backend</span></span> (Default: )
-<span class="fundoc_doc">Type of terminal to use when running ROOT</span></p>
+<span class="fundoc_doc">Type of terminal to use when running ROOT.</span></p>
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-buffer-name</span></span> (Default: )
-<span class="fundoc_doc">Name of the newly create buffer for ROOT</span></p>
+<span class="fundoc_doc">Name of the newly create buffer for ROOT.</span></p>
 #+end_export
 
 ** Function index
