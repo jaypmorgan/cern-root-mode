@@ -360,7 +360,7 @@ rcfiles."
 (add-to-list 'org-src-lang-modes '("cern-root" . c++))
 
 ;;;###autoload
-(defun org-babel-execute:root (body params)
+(defun org-babel-execute:cern-root (body params)
   "Execute a C++ `org-mode' source code block (BODY) with PARAMS in ROOT REPL."
   (message "Executing C++ source code block with ROOT")
   (print params)
