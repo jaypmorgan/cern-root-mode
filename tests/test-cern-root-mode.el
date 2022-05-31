@@ -58,6 +58,16 @@ void test() {
     m.print_my_name();
 }")
 
+(defconst test-file-4
+  "template      <typename F>
+struct Person {
+  F age;
+};
+
+double test() {
+    Person<double> p = { 54.4 };
+    return p.age;
+}")
 ;;; begin tests
 
 (ert-deftest cern-root-test-push-new ()
@@ -106,3 +116,7 @@ void test() {
 (ert-deftest cern-root-test-root-file-3 ()
   "Tests that test-file-3 can be sent to the REPL and the correct result is returned."
   (do-test-file test-file-3 "My Fair Lady\n"))
+
+(ert-deftest cern-root-test-root-file-4 ()
+  "Tests that a templated struct can be parsed."
+  (do-test-file test-file-4 "(double) 54.400000\n"))
