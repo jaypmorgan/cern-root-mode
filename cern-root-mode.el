@@ -156,7 +156,7 @@
 (defun cern-root--preinput-clean (input)
   "Clean INPUT before sending to the process."
   ;; move the template definition onto the same line as the function declaration
-  (replace-regexp-in-string "template<\\(.*\\)>\n" "template<\\1>" (format "%s" input)))
+  (replace-regexp-in-string "template\s*<\\(.*\\)>\n" "template<\\1>" (format "%s" input)))
 
 (defun cern-root--send-string (proc input)
   "Send INPUT to the ROOT repl running as PROC."
