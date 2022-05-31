@@ -1,6 +1,6 @@
 Test that org-babel can even execute the code block and return the result:
 
-#+begin_src root
+#+begin_src cern-root
 printf("test\n");
 #+end_src
 
@@ -9,7 +9,7 @@ printf("test\n");
 
 This code block tests that a session with the correct name can be created
 
-#+begin_src root :session testing
+#+begin_src cern-root :session testing
 printf("test\n");
 #+end_src
 
@@ -19,7 +19,7 @@ printf("test\n");
 Here I am testing that one can create a code block that declares and applies a
 function. In this we have many lines of statements.
 
-#+begin_src root :session new-session
+#+begin_src cern-root :session new-session
 int testing(int a, int b) {
     return a + b;
 }
@@ -35,9 +35,40 @@ printf("The result is %d\n", result);
 Testing that values from one session do indeed carry onto the next code block. As
 long as the spawned process is not closed in between, this should be a given.
 
-#+begin_src root :session new-session
+#+begin_src cern-root :session new-session
 testing(1, 2)
 #+end_src
 
 #+RESULTS:
 : (int) 3
+
+#+begin_src cern-root :results output file
+const char* macro3(){
+    const char* filename{"/tmp/polar-plot.png"};
+    auto c = new TCanvas("myCanvas","myCanvas",600,600);
+    double rmin = 0.;
+    double rmax = TMath::Pi()*6.;
+    const int npoints = 1000;
+    double r[npoints];
+    double theta[npoints];
+    for (int ipt = 0; ipt < npoints; ipt++) {
+        theta[ipt] = ipt*(rmax-rmin)/npoints+rmin;
+        r[ipt] = TMath::Sin(theta[ipt]);
+    }
+    auto grP1 = new TGraphPolar(npoints,theta,r);
+    grP1->SetTitle("A Fan");
+    grP1->SetLineWidth(3);
+    grP1->SetLineColor(2);
+    grP1->Draw("L");
+    gPad->Update();
+    grP1->GetPolargram()->SetToRadian();
+    c->SaveAs(filename);
+    return filename;
+}
+
+const char* filename = macro3();
+printf("%s", filename);
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/polar-plot.png]]

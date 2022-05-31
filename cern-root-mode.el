@@ -287,10 +287,6 @@ rcfiles."
   (set (make-local-variable 'comint-input-sender) 'cern-root--send-string)
   (cern-root--initialise))
 
-;; (defun org-babel-execute:root (body params)
-;;   "Execute a block of C++ code with ROOT in org-mode."
-;;   (message "Executing C++ source code block in ROOT"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Completion framework
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -392,7 +388,7 @@ rcfiles."
       (progn
 	(cern-root--org-babel-start-session)
 	(cern-root--send-string cern-root-buffer-name body)
-	(sleep-for 0.5)  ;; wait for the output to be printed in the REPL
+	(sleep-for 1.0)  ;; wait for the output to be printed in the REPL
 	(let ((output (cern-root--get-last-output)))
 	  (cern-root--org-babel-kill-session)
 	  output))
@@ -406,7 +402,7 @@ rcfiles."
       (cern-root--remembering-position
        (cern-root-run)))
     (cern-root--send-string cern-root-buffer-name body)
-    (sleep-for 0.5)
+    (sleep-for 1.0)
     (cern-root--get-last-output)))
 
 (defun cern-root--org-babel-execute-no-session (body params)

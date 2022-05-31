@@ -181,6 +181,50 @@ test();  // call the test function
 This gets us a long way to achieving the same functionality as =root --notebook=, but
 in Emacs.
 
+*** Creating Figures
+
+Figures can be created by saving the plot before hand, and printing out the filename
+of the newly saved plot. Let's explain this by way of an example. If we have a
+function that creates a plot and saves it a file:
+
+#+begin_example
+#+begin_src cern-root
+const char* macro3(){
+    const char* filename{"/tmp/polar-plot.png"};
+    auto c = new TCanvas("myCanvas","myCanvas",600,600);
+    double rmin = 0.;
+    double rmax = TMath::Pi()*6.;
+    const int npoints = 1000;
+    double r[npoints];
+    double theta[npoints];
+    for (int ipt = 0; ipt < npoints; ipt++) {
+        theta[ipt] = ipt*(rmax-rmin)/npoints+rmin;
+        r[ipt] = TMath::Sin(theta[ipt]);
+    }
+    auto grP1 = new TGraphPolar(npoints,theta,r);
+    grP1->SetTitle("A Fan");
+    grP1->SetLineWidth(3);
+    grP1->SetLineColor(2);
+    grP1->Draw("L");
+    gPad->Update();
+    grP1->GetPolargram()->SetToRadian();
+    c->SaveAs(filename);
+    return filename;
+}
+#+end_src
+#+end_example
+
+We can then execute this function (which will save the plot), and then we just need
+to print out the name of the saved file. In addition, we need to specify that our
+results is a file:
+
+#+begin_example
+#+begin_src cern-root :results output file
+const char* filename = macro3();
+printf("%s", filename);
+#+end_src
+#+end_example
+
 
 * Customisation
 
