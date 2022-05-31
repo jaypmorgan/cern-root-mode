@@ -126,14 +126,10 @@ stored in the `tests/` directory. To run these unit tests, you can
 either evaluate the specific buffer in Emacs and run `ert` (see
 <https://www.gnu.org/software/emacs/manual/html_node/ert/Running-Tests-Interactively.html>
 for more information), or you can them all from the command line
-using:
+using the Makefile:
 
 ```bash
-emacs -batch \
-	-l ert \
-	-l cern-root-mode.el \
-	-l tests/test-cern-root-mode.el \
-	-f ert-run-tests-batch-and-exit
+make test
 ```
 
 ## Comparison with other tools
