@@ -188,7 +188,7 @@ of the newly saved plot. Let's explain this by way of an example. If we have a
 function that creates a plot and saves it a file:
 
 #+begin_example
-#+begin_src cern-root
+#+begin_src cern-root :session *root*
 const char* macro3(){
     const char* filename{"/tmp/polar-plot.png"};
     auto c = new TCanvas("myCanvas","myCanvas",600,600);
@@ -219,7 +219,7 @@ to print out the name of the saved file. In addition, we need to specify that ou
 results is a file:
 
 #+begin_example
-#+begin_src cern-root :results output file
+#+begin_src cern-root :session *root* :results output file
 const char* filename = macro3();
 printf("%s", filename);
 #+end_src

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-05-31 mar. 15:04 -->
+<!-- 2022-05-31 mar. 15:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CERN-ROOT-mode User Manual</title>
@@ -202,43 +202,43 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2daab29">1. Introduction</a>
+<li><a href="#orgfd80a60">1. Introduction</a>
 <ul>
-<li><a href="#orgefeba25">1.1. What is ROOT?</a></li>
-<li><a href="#orgd16f6d1">1.2. What is CERN-ROOT-mode?</a></li>
+<li><a href="#orga4e2744">1.1. What is ROOT?</a></li>
+<li><a href="#org871ab71">1.2. What is CERN-ROOT-mode?</a></li>
 </ul>
 </li>
-<li><a href="#orgd58d70c">2. Installation</a>
+<li><a href="#org0a4a517">2. Installation</a>
 <ul>
-<li><a href="#orgac6c327">2.1. Installing with <code>package.el</code></a></li>
-<li><a href="#org48860a3">2.2. Manual installation</a></li>
-<li><a href="#org3510306">2.3. Using <code>use-package</code> and <code>straight.el</code></a></li>
+<li><a href="#org0efdf08">2.1. Installing with <code>package.el</code></a></li>
+<li><a href="#org2b8ce6d">2.2. Manual installation</a></li>
+<li><a href="#orgfed7b4f">2.3. Using <code>use-package</code> and <code>straight.el</code></a></li>
 </ul>
 </li>
-<li><a href="#orgbc6f4cb">3. Using cern-root-mode</a>
+<li><a href="#org32013ae">3. Using cern-root-mode</a>
 <ul>
-<li><a href="#orge88b40a">3.1. Using ROOT in Org-mode</a>
+<li><a href="#orgbe263c0">3.1. Using ROOT in Org-mode</a>
 <ul>
-<li><a href="#orga0cc415">3.1.1. Creating Figures</a></li>
+<li><a href="#orgcadd772">3.1.1. Creating Figures</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga740f6a">4. Customisation</a></li>
-<li><a href="#org1596a74">5. Developing CERN-ROOT-mode</a>
+<li><a href="#orgb085368">4. Customisation</a></li>
+<li><a href="#orge333a23">5. Developing CERN-ROOT-mode</a>
 <ul>
-<li><a href="#org7b13762">5.1. Variable index</a></li>
-<li><a href="#org5497e31">5.2. Function index</a></li>
-<li><a href="#orgd8178be">5.3. Testing</a></li>
-<li><a href="#org12d5eff">5.4. Contributions</a></li>
+<li><a href="#orgb941f95">5.1. Variable index</a></li>
+<li><a href="#org01a7817">5.2. Function index</a></li>
+<li><a href="#org2521d07">5.3. Testing</a></li>
+<li><a href="#org3019ea7">5.4. Contributions</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org2daab29" class="outline-2">
-<h2 id="org2daab29"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-orgfd80a60" class="outline-2">
+<h2 id="orgfd80a60"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This is the user-manual for the CERN-ROOT-mode package, the source code of which can be
@@ -253,8 +253,8 @@ ROOT command line interface/REPL.
 </p>
 </div>
 
-<div id="outline-container-orgefeba25" class="outline-3">
-<h3 id="orgefeba25"><span class="section-number-3">1.1.</span> What is ROOT?</h3>
+<div id="outline-container-orga4e2744" class="outline-3">
+<h3 id="orga4e2744"><span class="section-number-3">1.1.</span> What is ROOT?</h3>
 <div class="outline-text-3" id="text-1-1">
 <blockquote>
 <p>
@@ -266,8 +266,8 @@ ROOT files. The Higgs was found with ROOT!
 </div>
 </div>
 
-<div id="outline-container-orgd16f6d1" class="outline-3">
-<h3 id="orgd16f6d1"><span class="section-number-3">1.2.</span> What is CERN-ROOT-mode?</h3>
+<div id="outline-container-org871ab71" class="outline-3">
+<h3 id="org871ab71"><span class="section-number-3">1.2.</span> What is CERN-ROOT-mode?</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 CERN-ROOT-mode is a major-mode in Emacs that provides the functionality to easily interact
@@ -279,7 +279,7 @@ again, using the ROOT REPL.
 </p>
 
 
-<div id="org7692277" class="figure">
+<div id="orge27afd5" class="figure">
 <p><img src="./images/brief-example.gif" alt="brief-example.gif" />
 </p>
 <p><span class="figure-number">Figure 1: </span>A brief example of what we want CERN-ROOT-mode to do: that is evaluate C++ statements in the ROOT REPL, quickly and easily.</p>
@@ -288,12 +288,12 @@ again, using the ROOT REPL.
 </div>
 </div>
 
-<div id="outline-container-orgd58d70c" class="outline-2">
-<h2 id="orgd58d70c"><span class="section-number-2">2.</span> Installation</h2>
+<div id="outline-container-org0a4a517" class="outline-2">
+<h2 id="org0a4a517"><span class="section-number-2">2.</span> Installation</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgac6c327" class="outline-3">
-<h3 id="orgac6c327"><span class="section-number-3">2.1.</span> Installing with <code>package.el</code></h3>
+<div id="outline-container-org0efdf08" class="outline-3">
+<h3 id="org0efdf08"><span class="section-number-3">2.1.</span> Installing with <code>package.el</code></h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 CERN-ROOT-mode is available on <a href="https://melpa.org/#/cern-root-mode">Melpa</a>, so if you use <code>package.el</code>, and assuming that
@@ -318,8 +318,8 @@ run <code>(package-install 'cern-root-mode)</code>.
 </div>
 </div>
 
-<div id="outline-container-org48860a3" class="outline-3">
-<h3 id="org48860a3"><span class="section-number-3">2.2.</span> Manual installation</h3>
+<div id="outline-container-org2b8ce6d" class="outline-3">
+<h3 id="org2b8ce6d"><span class="section-number-3">2.2.</span> Manual installation</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 First you will need to clone the repository from Github:
@@ -338,7 +338,7 @@ begin using the package straight away.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orge30d276">(add-to-list 'load-path <span style="color: #8b2252;">"~/.emacs.d/cern-root-mode/"</span>)
+<pre class="src src-emacs-lisp" id="org4bc54c5">(add-to-list 'load-path <span style="color: #8b2252;">"~/.emacs.d/cern-root-mode/"</span>)
 (load <span style="color: #8b2252;">"root"</span>)
 (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">cern-root-mode</span>)
 </pre>
@@ -351,7 +351,7 @@ path (absolute or relative) to the ROOT REPL executable.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org46cae9d">(<span style="color: #a020f0;">setq</span> cern-root-filepath <span style="color: #8b2252;">"/path/to/root"</span>
+<pre class="src src-emacs-lisp" id="org52c1119">(<span style="color: #a020f0;">setq</span> cern-root-filepath <span style="color: #8b2252;">"/path/to/root"</span>
       cern-root-terminal-backend 'vterm)
 </pre>
 </div>
@@ -362,7 +362,7 @@ would suggest that these key-bindings are only created within the C++ keymap.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgb48c199">(define-key 'c++-mode-map (kbd <span style="color: #8b2252;">"C-c C-c"</span>) 'cern-root-eval-defun-maybe)
+<pre class="src src-emacs-lisp" id="org9101050">(define-key 'c++-mode-map (kbd <span style="color: #8b2252;">"C-c C-c"</span>) 'cern-root-eval-defun-maybe)
 (define-key 'c++-mode-map (kbd <span style="color: #8b2252;">"C-c C-b"</span>) 'cern-root-eval-buffer)
 (define-key 'c++-mode-map (kbd <span style="color: #8b2252;">"C-c C-l"</span>) 'cern-root-eval-file)
 </pre>
@@ -386,8 +386,8 @@ In summary we would have the following configuration:
 </div>
 </div>
 
-<div id="outline-container-org3510306" class="outline-3">
-<h3 id="org3510306"><span class="section-number-3">2.3.</span> Using <code>use-package</code> and <code>straight.el</code></h3>
+<div id="outline-container-orgfed7b4f" class="outline-3">
+<h3 id="orgfed7b4f"><span class="section-number-3">2.3.</span> Using <code>use-package</code> and <code>straight.el</code></h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Here is one example of installing/configuring the package with <code>straight.el</code>:
@@ -410,8 +410,8 @@ Here is one example of installing/configuring the package with <code>straight.el
 </div>
 
 
-<div id="outline-container-orgbc6f4cb" class="outline-2">
-<h2 id="orgbc6f4cb"><span class="section-number-2">3.</span> Using cern-root-mode</h2>
+<div id="outline-container-org32013ae" class="outline-2">
+<h2 id="org32013ae"><span class="section-number-2">3.</span> Using cern-root-mode</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 When in a C++ major-mode buffer, enter the command (using <code>M-x</code>): <code>cern-root-run</code>. This will
@@ -425,8 +425,8 @@ then create a new ROOT REPL in the other window.
 </p>
 </div>
 
-<div id="outline-container-orge88b40a" class="outline-3">
-<h3 id="orge88b40a"><span class="section-number-3">3.1.</span> Using ROOT in Org-mode</h3>
+<div id="outline-container-orgbe263c0" class="outline-3">
+<h3 id="orgbe263c0"><span class="section-number-3">3.1.</span> Using ROOT in Org-mode</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 CERN-ROOT-mode provides the functionality to execute C++ source code blocks using the ROOT
@@ -435,7 +435,7 @@ in org-mode more fluid (for an example, see <a href="fig:org-mode-test">fig:org-
 </p>
 
 
-<div id="orged043e1" class="figure">
+<div id="org8db3a9c" class="figure">
 <p><img src="./images/org-mode-example.gif" alt="org-mode-example.gif" />
 </p>
 <p><span class="figure-number">Figure 2: </span>Evaluating C++ source code blocks within Org-mode documents using ROOT!</p>
@@ -446,7 +446,7 @@ To write C++ code blocks that then are executed using ROOT, specify
 <code>root</code> as the language in the <code>begin_src</code> header. For example:
 </p>
 
-<pre class="example" id="orgefdb73c">
+<pre class="example" id="orge03acf8">
 #+begin_src root
 // write your code here.
 #+end_src
@@ -465,7 +465,7 @@ the context of many source blocks. For example, let's create another
 code block with this session argument:
 </p>
 
-<pre class="example" id="org45909cf">
+<pre class="example" id="org9ffd2fa">
 #+begin_src cern-root :session *my-root-session*
 void test() {
 	// print something
@@ -482,7 +482,7 @@ the code blocks!). This means that, by specifying the same argument to
 a different code block, we can call this <code>test</code> function.
 </p>
 
-<pre class="example" id="org221e157">
+<pre class="example" id="org256c683">
 #+begin_src cern-root :session *my-root-session*
 test();  // call the test function
 #+end_src
@@ -494,8 +494,8 @@ in Emacs.
 </p>
 </div>
 
-<div id="outline-container-orga0cc415" class="outline-4">
-<h4 id="orga0cc415"><span class="section-number-4">3.1.1.</span> Creating Figures</h4>
+<div id="outline-container-orgcadd772" class="outline-4">
+<h4 id="orgcadd772"><span class="section-number-4">3.1.1.</span> Creating Figures</h4>
 <div class="outline-text-4" id="text-3-1-1">
 <p>
 Figures can be created by saving the plot before hand, and printing out the filename
@@ -503,8 +503,8 @@ of the newly saved plot. Let's explain this by way of an example. If we have a
 function that creates a plot and saves it a file:
 </p>
 
-<pre class="example" id="org729bc97">
-#+begin_src cern-root
+<pre class="example" id="orgb058b36">
+#+begin_src cern-root :session *root*
 const char* macro3(){
     const char* filename{"/tmp/polar-plot.png"};
     auto c = new TCanvas("myCanvas","myCanvas",600,600);
@@ -536,8 +536,8 @@ to print out the name of the saved file. In addition, we need to specify that ou
 results is a file:
 </p>
 
-<pre class="example" id="org4435395">
-#+begin_src cern-root :results output file
+<pre class="example" id="org63fb50e">
+#+begin_src cern-root :session *root* :results output file
 const char* filename = macro3();
 printf("%s", filename);
 #+end_src
@@ -548,8 +548,8 @@ printf("%s", filename);
 </div>
 
 
-<div id="outline-container-orga740f6a" class="outline-2">
-<h2 id="orga740f6a"><span class="section-number-2">4.</span> Customisation</h2>
+<div id="outline-container-orgb085368" class="outline-2">
+<h2 id="orgb085368"><span class="section-number-2">4.</span> Customisation</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 There are only a few variables provided by the package:
@@ -581,12 +581,12 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 </div>
 
 
-<div id="outline-container-org1596a74" class="outline-2">
-<h2 id="org1596a74"><span class="section-number-2">5.</span> Developing CERN-ROOT-mode</h2>
+<div id="outline-container-orge333a23" class="outline-2">
+<h2 id="orge333a23"><span class="section-number-2">5.</span> Developing CERN-ROOT-mode</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org7b13762" class="outline-3">
-<h3 id="org7b13762"><span class="section-number-3">5.1.</span> Variable index</h3>
+<div id="outline-container-orgb941f95" class="outline-3">
+<h3 id="orgb941f95"><span class="section-number-3">5.1.</span> Variable index</h3>
 <div class="outline-text-3" id="text-5-1">
 <p class="fundoc"><span class="fundoc_header">Variable <span class="fundoc_name">cern-root-filepath</span></span> (Default: )
 <span class="fundoc_doc">Path to the ROOT executable.</span></p>
@@ -601,8 +601,8 @@ auto-complete, I would recommend switching the backend to <code>'vterm</code>
 </div>
 </div>
 
-<div id="outline-container-org5497e31" class="outline-3">
-<h3 id="org5497e31"><span class="section-number-3">5.2.</span> Function index</h3>
+<div id="outline-container-org01a7817" class="outline-3">
+<h3 id="org01a7817"><span class="section-number-3">5.2.</span> Function index</h3>
 <div class="outline-text-3" id="text-5-2">
 <p class="fundoc"><span class="fundoc_header">Function <span class="fundoc_name">cern-root-run</span> <span class="fundoc_arglist">nil</span></span> 
 <span class="fundoc_doc">Run an inferior instance of ROOT.</span></p>
@@ -649,8 +649,8 @@ rcfiles.</span></p>
 </div>
 
 
-<div id="outline-container-orgd8178be" class="outline-3">
-<h3 id="orgd8178be"><span class="section-number-3">5.3.</span> Testing</h3>
+<div id="outline-container-org2521d07" class="outline-3">
+<h3 id="org2521d07"><span class="section-number-3">5.3.</span> Testing</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 To test the functionality of the package, some unit tests have been
@@ -673,8 +673,8 @@ using:
 </div>
 
 
-<div id="outline-container-org12d5eff" class="outline-3">
-<h3 id="org12d5eff"><span class="section-number-3">5.4.</span> Contributions</h3>
+<div id="outline-container-org3019ea7" class="outline-3">
+<h3 id="org3019ea7"><span class="section-number-3">5.4.</span> Contributions</h3>
 <div class="outline-text-3" id="text-5-4">
 <p>
 All contributions should be directed to <a href="https://github.com/jaypmorgan/cern-root-mode">https://github.com/jaypmorgan/cern-root-mode</a> where
@@ -687,7 +687,7 @@ you can submit issues and pull-requests.
 <div id="postamble" class="status">
 <p class="date">Date: 2022-04-20 mer. 00:00</p>
 <p class="author">Author: Jay Morgan</p>
-<p class="date">Created: 2022-05-31 mar. 15:04</p>
+<p class="date">Created: 2022-05-31 mar. 15:06</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
