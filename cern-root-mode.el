@@ -353,7 +353,8 @@ rcfiles."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
-(add-to-list 'org-src-lang-modes '("cern-root" . c++))
+(with-eval-after-load "org"
+  (add-to-list 'org-src-lang-modes '("cern-root" . c++)))
 
 ;;;###autoload
 (defun org-babel-execute:cern-root (body params)
