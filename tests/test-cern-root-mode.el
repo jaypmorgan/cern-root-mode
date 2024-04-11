@@ -68,6 +68,13 @@ double test() {
     Person<double> p = { 54.4 };
     return p.age;
 }")
+
+(defconst test-file-5
+  "float decay(float val)
+{
+  return exp(-val);
+}
+")
 ;;; begin tests
 
 (ert-deftest cern-root-test-push-new ()
@@ -120,3 +127,7 @@ double test() {
 (ert-deftest cern-root-test-root-file-4 ()
   "Tests that a templated struct can be parsed."
   (do-test-file test-file-4 "(double) 54.400000\n"))
+
+(ert-deftest cern-root-test-root-file-5 ()
+  "Tests that a different curly-braces style can be parsed."
+  (do-test-file test-file-5 "(double) 50.\n"))
