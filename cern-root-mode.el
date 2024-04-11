@@ -116,13 +116,13 @@
 
 (defvar cern-root--backend-functions
   '((vterm . ((start-terminal . cern-root--start-vterm)
-	      (send-function . cern-root--send-vterm)
-	      (previous-prompt . vterm-previous-prompt)
-	      (next-prompt . vterm-next-prompt)))
+	          (send-function . cern-root--send-vterm)
+	          (previous-prompt . vterm-previous-prompt)
+	          (next-prompt . vterm-next-prompt)))
     (inferior . ((start-terminal . cern-root--start-inferior)
-		 (send-function . cern-root--send-inferior)
-		 (previous-prompt . comint-previous-prompt)
-		 (next-prompt . comint-next-prompt))))
+		         (send-function . cern-root--send-inferior)
+		         (previous-prompt . comint-previous-prompt)
+		         (next-prompt . comint-next-prompt))))
   "Mapping from terminal type to various specific functions.")
 
 (defun cern-root--get-functions-for-terminal (terminal)
@@ -222,9 +222,10 @@
   "Create a temporary file and populate it with TEXT."
   (cern-root--remembering-position
    (let* ((temp-file (format "%s.C" (make-temp-file "root")))
-	  (buf       (find-file temp-file)))
+	      (buf       (find-file temp-file)))
      (switch-to-buffer buf)
-     (insert (cern-root--text-property-get-contents text))
+     (insert text)
+     ;;(insert (cern-root--text-property-get-contents text))
      (write-file temp-file nil)
      (kill-buffer buf)
      temp-file)))
@@ -467,7 +468,7 @@ rcfiles."
   (interactive "r")
   (kill-ring-save beg end)
   (let ((string (format "%s" (buffer-substring beg end))))
-    (cern-root-switch-to-repl)
+    ; (cern-root-switch-to-repl)
     (cern-root--send-string cern-root-buffer-name string)))
 
 (defun cern-root-eval-string (string)
