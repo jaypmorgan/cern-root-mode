@@ -82,6 +82,16 @@ double test() {
    */ 
 }")
 
+(defconst test-file-6
+  ".rawInput
+std::vector<std::vector<std::string>> test(void)
+{
+  // function that returns a vector of vector
+  // of strings.
+  return { {\"this\", \"is\", \"a\", \"test\"} };
+}
+.rawInput")
+
 ;;; begin tests
 
 (ert-deftest cern-root-test-push-new ()
@@ -115,7 +125,7 @@ double test() {
   `(with-cern-root-repl
     (cern-root-eval-string ,test-file)
     (cern-root-eval-string "test()")
-    (sleep-for 0.5)
+    (sleep-for 0.05)
     (let ((result (cern-root--get-last-output)))
       (should (equal result ,expected)))))
 
@@ -138,3 +148,7 @@ double test() {
 (ert-deftest cern-root-test-root-file-5 ()
   "Tests that a different curly-braces style and comments can be parsed."
   (do-test-file test-file-5 "(float) 2.06115e-09f\n"))
+
+(ert-deftest cern-root-test-root-file-6 ()
+  "Tests that functions with <> in the returns are parsed correctly."
+  (do-test-file test-file-6 ""))
