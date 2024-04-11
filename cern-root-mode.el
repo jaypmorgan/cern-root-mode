@@ -153,10 +153,29 @@
   "Send INPUT to an inferior REPL running as PROC."
   (comint-send-string proc (format "%s\n" input)))
 
+(defun cern-root--clean-strip-comment (input)
+  "Strip out the comments in INPUT."
+  (replace-regexp-in-string "\/\\*\\(\n.*?\\)*\\*\/" "" ; multi-line comments
+                            (replace-regexp-in-string "\/\/.*" "" input)))
+
+(defun cern-root--clean-to-one-line (input)
+  "Convert INPUT to a single line of text."
+  (replace-regexp-in-string "\n" "" input))
+
+(defun cern-root--clean-normalise-brace-style (input)
+  "Normalise the brace style in INPUT to K&R."
+  (replace-regexp-in-string "\s?\n{" " {" input))
+
+(defun cern-root--clean-fix-templates (input)
+  "Fix templates in INPUT."
+  (replace-regexp-in-string "template\s*<\\(.*\\)>\n" "template<\\1>" (format "%s" input)))
+
 (defun cern-root--preinput-clean (input)
   "Clean INPUT before sending to the process."
   ;; move the template definition onto the same line as the function declaration
-  (replace-regexp-in-string "template\s*<\\(.*\\)>\n" "template<\\1>" (format "%s" input)))
+  (cern-root--clean-normalise-brace-style
+   (cern-root--clean-fix-templates
+    (cern-root--clean-strip-comment input))))
 
 (defun cern-root--send-string (proc input)
   "Send INPUT to the ROOT repl running as PROC."

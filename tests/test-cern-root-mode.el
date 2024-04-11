@@ -68,6 +68,20 @@ double test() {
     Person<double> p = { 54.4 };
     return p.age;
 }")
+
+(defconst test-file-5
+  "float test(void)
+{
+  float val = 20.; // this is a test
+  /*
+   * This is a multiline comment
+   */
+  return exp(-val);
+  /*
+   * this is another comment.
+   */ 
+}")
+
 ;;; begin tests
 
 (ert-deftest cern-root-test-push-new ()
@@ -120,3 +134,7 @@ double test() {
 (ert-deftest cern-root-test-root-file-4 ()
   "Tests that a templated struct can be parsed."
   (do-test-file test-file-4 "(double) 54.400000\n"))
+
+(ert-deftest cern-root-test-root-file-5 ()
+  "Tests that a different curly-braces style and comments can be parsed."
+  (do-test-file test-file-5 "(float) 2.06115e-09f\n"))
