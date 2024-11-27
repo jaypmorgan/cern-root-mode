@@ -29,26 +29,13 @@ example of installing/configuring the package with straight.el:
 
 There are only a few variables provided by the package:
 
-- **cern-root-filepath** -- (string, default `"root"`) this is the
-  absolute/relative path to the root executable. This could be left as
-  the default "root" value if ROOT is available on your $PATH.
-- **cern-root-command-option** -- (string, default `""`) these are the
-  command line options used when starting ROOT. By default there are
-  no options.
-- **cern-root-prompt-regex** -- (string, default `"^\\[[0-9;^k]+m?"`) this
-  is the regular expression used to find the input prompt of the ROOT
-  REPL. If there is a customised prompt, this will need to be updated
-  to suit the customisation.
-- **cern-root-buffer-name** -- (string, default `"*ROOT*"`) what to call
-  the ROOT repl buffer when it starts. This could be left as the
-  default `*ROOT*`, but its there for you to modify as you please.
-- **cern-root-terminal-backend** -- (symbol, default `'terminal`) the
-  terminal emulator to run the ROOT instance in. There are only two
-  current defined [`vterm`, `inferior`]. By default, the terminal
-  backend is set to `inferior`. Though, there is still some issues in
-  getting the auto-complete to work correctly. If you really need
-  auto-complete, I would recommend switching the backend to `'vterm`
-  (requires you've already installed vterm).
+| Variable                     | Type   | Default value       | Description                                                                                                                                                             |
+|------------------------------|--------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `cern-root-filepath`         | string | `"root"`            | This is the absolute/relative path to the root executable. This could be left as the default "root" value if ROOT is available on your $PATH.                           |
+| `cern-root-command-option`   | string | `""`                | These are the command line options used when starting ROOT. By default there are no options.                                                                            |
+| `cern-root-prompt-regex`     | string | `"^\\[[0-9;^k]+m?"` | This is the regular expression used to find the input prompt of the ROOT REPL. If there is a customised prompt, this will need to be updated to suit the customisation. |
+| `cern-root-buffer-name`      | string | `"*ROOT*"`          | What to call the ROOT repl buffer when it starts. This could be left as the default `*ROOT*`, but its there for you to modify as you please.                            |
+| `cern-root-terminal-backend` | symbol | `'terminal`         | The terminal emulator to run the ROOT instance in. There are only two current defined [`vterm`, `inferior`]. By default, the terminal.                                   |
   
 ## Using the package
 
